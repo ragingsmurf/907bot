@@ -2,13 +2,8 @@
 logs
 *.log
 
-<<<<<<< HEAD
-# Env
-*.env
-=======
 # Env 
 .env
->>>>>>> 4733c492948c035fa0ab11d8a5b8c8549c08ebda
 
 # Runtime data
 pids
