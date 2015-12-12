@@ -2,6 +2,9 @@
 logs
 *.log
 
+# Env
+*.env
+
 # Runtime data
 pids
 *.pid
