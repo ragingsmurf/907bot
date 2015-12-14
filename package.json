@@ -1,0 +1,30 @@
+{
+  "name": "907bot",
+  "version": "1.0.0",
+  "engines": {
+    "node": "5.2.0"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "git@github.com:ragingsmurf/907bot.git"
+  },
+  "description": "Social Services Bot",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "nf start dev=1"
+  },
+  "author": "James Davis",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "2.3.4",
+    "supervisor": "0.9.1"
+  },
+  "dependencies": {
+    "foreman": "1.4.1",
+    "natural": "0.2.1"
+  }
+}
