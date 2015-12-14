@@ -32,8 +32,6 @@ describe('tf*idf', function() {
       } else {
         assert.fail(0,1,'Selected document did not a match!');
       }
-      console.log();
-      console.log(tfidf.tfidf('node', 1));
     });
   });
 });
