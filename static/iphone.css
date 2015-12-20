@@ -42,12 +42,12 @@
     -o-border-radius: 8px 8px 0px 8px;
     -ms-border-radius: 8px 8px 0px 8px;
     border-radius: 8px 8px 0px 8px;
-    background-color: #07D;
+    background-color: #65B045;
     color: white;
 }
 
 .bubbledRight:before {
-    border-bottom: 9px solid #07D;
+    border-bottom: 9px solid #65B045;
     border-right: 9px solid rgba(0, 0, 0, 0);
     position: absolute;
     bottom: 0;
