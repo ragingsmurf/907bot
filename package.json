@@ -30,6 +30,7 @@
     "koa-json": "1.1.1",
     "koa-json-body": "4.0.0",
     "koa-static": "1.5.2",
+    "linq-es6": "0.2.1",
     "mongoose": "4.3.3",
     "natural": "0.2.1",
     "nodemon": "1.8.1"

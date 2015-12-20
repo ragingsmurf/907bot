@@ -2,8 +2,8 @@
 // jscs:disable requireCapitalizedComments
 
 let assert = require('assert');
-let l = require('../modules/logger.js')();
-var jsonQuery = require('json-query');
+let jsonQuery = require('json-query');
+let oe = require('./../modules/oeparser')();
 
 describe('json-query', function() {
   it('can search a basic JSON structure', function() {
@@ -16,12 +16,13 @@ describe('json-query', function() {
     let result = jsonQuery('people[country=NZ].name', { data: data });
     assert.equal(result.value, 'Matt');
   });
-
-  it('can find Emergency Shelter element in Open Eligibility JSON', function() {
-    let oe = require('./../data/oe');
-    let query = 'taxonomy.top_level[@title=Emergency]';
-    query += '.second_level[@title=Emergency Shelter].[@id]';
-    let result = jsonQuery(query, { data: oe });
-    assert.equal(result.value, '101-04');
+  it('can list top level of Open Eligibility', function() {
+    assert.equal(oe.directory().length, 11);
+  });
+  it('can search for empty child list and not error', function() {
+    assert.equal(oe.find('101', '101-04').length, 0);
+  });
+  it('can search third level Open Eligibility and return list', function() {
+    assert.equal(oe.find('101', '101-02').length, 6);
   });
 });
