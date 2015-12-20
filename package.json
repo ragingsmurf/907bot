@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "nf start dev=1"
+    "start": "nf start web=1"
   },
   "author": "James Davis",
   "license": "ISC",
@@ -26,6 +26,12 @@
   "dependencies": {
     "foreman": "1.4.1",
     "json-query": "1.5.0",
-    "natural": "0.2.1"
+    "koa": "1.1.2",
+    "koa-json": "1.1.1",
+    "koa-json-body": "4.0.0",
+    "koa-static": "1.5.2",
+    "mongoose": "4.3.3",
+    "natural": "0.2.1",
+    "nodemon": "1.8.1"
   }
 }
