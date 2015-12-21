@@ -1,0 +1,17 @@
+{
+  "topic" : {
+    "user": [
+      "I would like to register as a user.",
+      "Can I register with this service?",
+      "Please register me as a user."],
+    "organization": [
+      "I would like to list my organization.",
+      "Can I register my non-profit organization?",
+      "How do I upate my organization's address?"],
+    "taxonomy": [
+      "How do I publish health and social services available?",
+      "Where can I get a open bed count list?",
+      "Can I get a list of human and health social services?"
+    ]
+  }
+}

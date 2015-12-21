@@ -9,14 +9,19 @@ let Bender = require('./modules/logic.base')();
 app.use(json());
 app.use(jsonBody({ limit: '1kb' }));
 app.use(serve('.'));
+
 app.use(function *(next) {
   if (this.url == '/message' && this.method == 'POST') {
-    this.body = { message: Bender.message(this.request.body.message) };
+    console.log(Bender.message(this.request.body.message));
+    this.body = {
+      message: Bender.message(this.request.body.message).text,
+    };
   } else {
     yield next;
   }
 });
 app.use(function *() {
-  this.body = 'Hello World';
+  this.body = '@907bot Service';
 });
+
 app.listen(3000);
