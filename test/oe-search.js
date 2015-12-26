@@ -3,7 +3,7 @@
 
 let assert = require('assert');
 let jsonQuery = require('json-query');
-let oe = require('./../modules/oeparser')();
+let oe = require('./../modules/oe')();
 
 describe('json-query', function() {
   it('can search a basic JSON structure', function() {

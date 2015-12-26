@@ -1,5 +1,14 @@
 {
   "help" : {
-    "instructions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vitae risus egestas, auctor diam nec, imperdiet sem. Fusce porta, ligula in condimentum lacinia, odio justo."
+    "instructions": "HELP - TODO - Write general help message."
+  },
+  "topic" : {
+    "instructions": "Users can be managed by use the following phrases - (add user|remove user|update user)"
+  },
+  "organization" : {
+    "instructions": "Organizations can be managed by use the following phrases - (add organization|remove organization|update organization)"
+  },
+  "directory" : {
+    "instructions": "The Social Services Directory can be managed by use the following phrases - (show directory|associate organization|remove organization)"
   }
 }
