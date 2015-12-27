@@ -17,9 +17,8 @@ exports.send = function() {
 }
 
 exports.respond = function(req, res, body) {
-  let text = body.Body;
   let resp = new twilio.TwimlResponse();
-  resp.message('You just sent in: ' + text);
+  resp.message(body);
   res.writeHead(200, {'Content-Type': 'text/xml'});
   res.end(resp.toString());
 }

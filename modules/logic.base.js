@@ -40,5 +40,8 @@ module.exports = function() {
       return { topic: topic, message: message };
 
     },
+    stem: function(message) {
+      return message.tokenizeAndStem(true);
+    },
   };
 }
