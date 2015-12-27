@@ -9,9 +9,9 @@ let router = require('koa-router')();
 
 // Internal Modules
 let sms = require('./modules/sms.utility');
-let phrase = require('./modules/phrase.command');
 let cmd = require('./modules/cmd')();
 let stack = require('./modules/cmd.stack')();
+let phrase = require('./modules/phrase.command');
 let services = require('./modules/cmd.services');
 
 app.keys = ['907Bot'];
@@ -31,8 +31,23 @@ router.post('/sms', function *(next) {
     case 'find': {
       // Execute find.
       let result = stack.execute(new services.find(query));
-      yield stack.getCurrentValue().then(function(msg) {
-        sms.respond(req, res, `${msg}`);
+      yield stack.getCurrentValue()
+      .then(function(obj) {
+        // Found Array of results.
+        if (Array.isArray(obj)) {
+          let txt = '';
+          for (var i = 0; i < obj.length; i++) {
+            txt += `${obj[i].id} (${obj[i].title})`;
+            if (obj[i].count) {
+              txt += `(${obj[i].count})`;
+            }
+            txt += '\n';
+          }
+          sms.respond(req, res, txt);
+        }
+      })
+      .catch(function(error) {
+        sms.respond(req, res, error);
       });
       break;
     }
