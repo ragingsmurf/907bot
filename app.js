@@ -6,8 +6,10 @@ let session = require('koa-session');
 let bodyParser = require('koa-bodyparser');
 let router = require('koa-router')();
 let twilio = require('./modules/twilio');
-let logicBase = require('./modules/logic.base')();
-let copy = require('./data/copy.instructions');
+let phrase = require('./modules/phrase');
+let cmd = require('./modules/cmd')();
+let stack = require('./modules/cmd.stack')();
+let services = require('./modules/cmd.services');
 
 app.keys = ['907Bot'];
 app.use(session(app));
@@ -15,41 +17,26 @@ app.use(bodyParser());
 
 // Incoming Twilio SMS messages
 router.post('/sms', function *(next) {
-  // 1. Stem into array, check for CLI keywords
-  let smsMsg = this.request.body.Body;
-  let phrase = logicBase.stem(smsMsg);
+  // 1. Convert to command object.
+  let smsQuery = phrase.basic(this.req, this.res, this.request.body.Body);
 
-  switch (phrase[0]) {
-    case 'help': {
-      twilio.respond(this.req, this.res, 'Help instructions!');
-      break;
-    }
+  // 2. Figure out which command, based on the query.
+  switch (smsQuery.command) {
     case 'find': {
-      if (phrase.length == 1) {
-        let msg = 'Please provide Find with a service name.';
-        twilio.respond(this.req, this.res,msg);
-      } else if (phrase.length >= 2) {
-        delete phrase[0]; // Remove Find Command
-        // Find remaining params
-        let msg = `Finding Services: ${phrase.join(' ')}`;
-        twilio.respond(this.req, this.res, msg); // Notify user.
-      }
-      break;
-    }
-    case 'add': {
-      twilio.respond(this.req, this.res, 'Add something!');
-      break;
-    }
-    case 'remove': {
-      break;
-    }
-    default: {
-      twilio.respond(this.req, this.res, 'No command found. Try "help"');
+      let txt = `Going to find: ${smsQuery.value}`;
+      twilio.respond(this.req, this.res, txt);
+      // TODO - Execute command Promises.
+      stack.execute(new services.find(smsQuery));
       break;
     }
   }
-});
 
+  // cmd.stack.execute(new cmdServ.find('Find something'));
+
+  // let msg = `One sec, finding: ${smsQuery.phrase.join(' ')}`;
+  // twilio.respond(this.req, this.res, msg); // Notify user.
+
+});
 
 // Default Page
 router.get('/', function *() {

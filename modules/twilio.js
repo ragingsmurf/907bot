@@ -5,12 +5,11 @@ let authToken = process.env.TWILIO_SECRET;
 let twilio = require('twilio');
 let client = new twilio.RestClient(accountSid, authToken);
 
-exports.send = function() {
-  // Require the Twilio module and create a REST client
+exports.send = function(to, from, body) {
   client.sendMms({
-    to: process.env.TEST_PHONENUMBER,
-    from: process.env.TWILIO_PHONENUMBER,
-    body: 'Hey Buddy! Good luck!',
+    to: to,
+    from: from,
+    body: body,
   }, function(err, message) {
     console.log(err);
   });

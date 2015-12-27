@@ -1,9 +1,9 @@
 {
   "help" : {
-    "instructions": "HELP - TODO - Write general help message."
+    "instructions": "Help - Bot Commands \n Find 'Service Name' or 'Service ID'"
   },
-  "topic" : {
-    "instructions": "Users can be managed by use the following phrases - (add user|remove user|update user)"
+  "find" : {
+    "noparameter": "'I'm gonna need a name or idea to find; search example: 'find bed count'"
   },
   "organization" : {
     "instructions": "Organizations can be managed by use the following phrases - (add organization|remove organization|update organization)"

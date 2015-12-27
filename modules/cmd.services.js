@@ -2,10 +2,11 @@
 
 let cmd = require('./cmd')();
 
-// Social services open eligibility directory commands
-function find(service) {return 'find ' + service;};
-
-// Find a Service
-exports.find = function(value) {
-  return new cmd.command(find, undefined, value);
+let FindCommand = function(query) {
+  return new cmd.command(
+    function() { return query; },
+    function() { return query; },
+    query);
 };
+
+exports.find = FindCommand;
