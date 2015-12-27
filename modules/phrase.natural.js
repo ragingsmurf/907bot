@@ -2,6 +2,7 @@
 // jscs:disable requireCapitalizedComments
 
 require('linq-es6');
+
 let natural = require('natural');
 natural.PorterStemmer.attach();
 natural.Metaphone.attach();

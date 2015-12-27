@@ -1,7 +1,7 @@
 'use strict';
 
-let logicBase = require('./../modules/logic.base')();
-let twilio = require('./../modules/twilio');
+let natural = require('./../modules/phrase.natural')();
+let sms = require('./../modules/sms.utility');
 
 exports.basic = function(req, res, message) {
 
@@ -9,45 +9,44 @@ exports.basic = function(req, res, message) {
   this.res = res;
   this.message = message;
 
-  let phrase = logicBase.stem(this.message);
+  let phrase = natural.stem(this.message);
   let query = {
-    command: undefined,
-    message: this.message,
-    phrase: phrase,
-    value: undefined,
+    command: undefined, // Unknown
+    message: this.message, // Original message
+    phrase: phrase, // Stemmed message
+    value: undefined, // Unknown
   };
 
   let copy = require('./../data/copy.instructions');
   switch (phrase[0]) {
     case 'help': {
-      twilio.respond(this.req, this.res, copy.help.instructions);
+      sms.respond(this.req, this.res, copy.help.instructions);
       query.command = 'help';
       return query;
       break;
     }
     case 'find': {
       if (phrase.length == 1) {
-        twilio.respond(this.req, this.res, copy.find.noparameter);
+        sms.respond(this.req, this.res, copy.find.noparameter);
         query.command = 'find';
         return query;
       } else if (phrase.length >= 2) {
         delete phrase[0]; // Remove Command
-        // Find parameter.
         query.command = 'find';
-        query.value = phrase.join(' ');
+        query.value = phrase.join(' ').trim();
         return query;
       }
       break;
     }
     case 'add': {
-      twilio.respond(this.req, this.res, 'Add something!');
+      sms.respond(this.req, this.res, 'Add something!');
       break;
     }
     case 'remove': {
       break;
     }
     default: {
-      twilio.respond(this.req, this.res, 'No command found. Try "help"');
+      sms.respond(this.req, this.res, 'No command found. Try "help"');
       break;
     }
   }
