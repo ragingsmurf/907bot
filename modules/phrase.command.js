@@ -25,28 +25,37 @@ exports.basic = function(req, res, message) {
       return query;
       break;
     }
-    case 'find': {
+    case 'show': {
       if (phrase.length == 1) {
-        sms.respond(this.req, this.res, copy.find.noparameter);
-        query.command = 'find';
+        sms.respond(this.req, this.res, copy.show.noparameter);
+        query.command = 'show';
         return query;
       } else if (phrase.length >= 2) {
         delete phrase[0]; // Remove Command
-        query.command = 'find';
+        query.command = 'show';
         query.value = phrase.join(' ').trim();
         return query;
       }
       break;
     }
-    case 'add': {
-      sms.respond(this.req, this.res, 'Add something!');
+    case 'select': {
+      if (phrase.length == 1) {
+        sms.respond(this.req, this.res, copy.select.noparameter);
+        query.command = 'select';
+        return query;
+      } else if (phrase.length >= 2) {
+        delete phrase[0]; // Remove Command
+        query.command = 'select';
+        query.value = phrase.join(' ').trim();
+        return query;
+      }
       break;
     }
     case 'remove': {
       break;
     }
     default: {
-      sms.respond(this.req, this.res, 'No command found. Try "help"');
+      sms.respond(this.req, this.res, `I couldn't find a command. Try "help"`);
       break;
     }
   }

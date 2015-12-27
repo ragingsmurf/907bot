@@ -1,4 +1,6 @@
 'use strict';
+// jscs:disable requireCapitalizedComments
+// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
 let jsonQuery = require('json-query');
 let oe = require('./../data/oe');
@@ -11,15 +13,45 @@ module.exports = function() {
       return oeParser(top);
     },
     // Second and Third directory.
-    find: search,
+    find: find,
+    select: select,
   };
-  function search(second, third) {
+
+  function find(second, third) {
     let query = top + `[@id=${second}].second_level`;
     if (third !== undefined) {
       query += `[@id=${third}].third_level`;
     }
     return oeParser(query);
   };
+
+  function select(second, third, fourth) {
+    let query = top + `[@id=${second}].second_level`;
+
+    if (third !== undefined) {
+      query += `[@id=${third}]`;
+    }
+    if (fourth !== undefined) {
+      query += `.third_level[@id=${fourth}]`;
+    }
+
+    let result = jsonQuery(query, { data: oe });
+    let node = {
+      id: result.value['@id'],
+      title: result.value['@title'],
+      count: 0,
+    };
+
+    if (third && !fourth) {
+      try {
+        node.count = result.value.third_level.length;
+      } catch (ex) {
+
+      }
+    }
+    return node;
+  };
+
   function oeParser(q) {
     let result = jsonQuery(q, { data: oe });
     let arrResult = new Array();
@@ -35,13 +67,13 @@ module.exports = function() {
       // Second level Child Nodes
       if (item.id.split(' ').length == 1) {
         let arr = item.id.split(' ');
-        let rslt = search(arr[0], undefined);
+        let rslt = find(arr[0], undefined);
         item.count = rslt.length;
       }
       // Third level Child Nodes
       if (item.id.split(' ').length == 2) {
         let arr = item.id.split(' ');
-        let rslt = search(arr[0], `${arr[0]}-${arr[1]}`);
+        let rslt = find(arr[0], `${arr[0]}-${arr[1]}`);
         item.count = rslt.length;
       }
       arrResult.push(item);

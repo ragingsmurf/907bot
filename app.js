@@ -24,13 +24,19 @@ router.post('/sms', function *(next) {
   let req = this.req;
   let res = this.res;
   let txt = this.request.body.Body;
+  let ckz = this.cookies;
   let query = phrase.basic(req, res, txt);
 
+  // Exit if Query wasn't parsed.
+  if (!query) {
+    console.log('Exited SMS routine because there was no valid query object.');
+    return false;
+  }
   // 2. Figure out which command, based on parsed query.
   switch (query.command) {
-    case 'find': {
+    case 'show': {
       // Execute find.
-      let result = stack.execute(new services.find(query));
+      let result = stack.execute(new services.show(query));
       yield stack.getCurrentValue()
       .then(function(obj) {
         // Found Array of results.
@@ -45,6 +51,21 @@ router.post('/sms', function *(next) {
           }
           sms.respond(req, res, txt);
         }
+      })
+      .catch(function(error) {
+        sms.respond(req, res, error);
+      });
+      break;
+    }
+    case 'select': {
+      // Execute Select.
+      let result = stack.execute(new services.select(query));
+      yield stack.getCurrentValue()
+      .then(function(obj) {
+        // Found Second or Third level node.
+        ckz.set('serviceid', obj.id, { signed: true });
+        let msg = `You have selected the '${obj.title}' (${(obj.id)}) service!`;
+        sms.respond(req, res, msg);
       })
       .catch(function(error) {
         sms.respond(req, res, error);

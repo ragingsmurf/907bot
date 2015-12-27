@@ -2,8 +2,11 @@
   "help" : {
     "instructions": "Help - Bot Commands \n Find 'Service Name' or 'Service ID'"
   },
-  "find" : {
-    "noparameter": "'I'm gonna need a name or idea to find; search example: 'find bed count'"
+  "show" : {
+    "noparameter": "I need a parameter for your Show request; for example: 'show all'"
+  },
+  "select" : {
+    "noparameter": "I need a parameter for your Select request; for example: 'select 102 04'"
   },
   "organization" : {
     "instructions": "Organizations can be managed by use the following phrases - (add organization|remove organization|update organization)"
