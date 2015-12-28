@@ -8,15 +8,17 @@ let oe = require('./../data/oe');
 module.exports = function() {
   let top = 'taxonomy.top_level';
   return {
-    // Top level directory.
+    // Default - Root Level
     directory: function() {
       return oeParser(top);
     },
-    // Second and Third directory.
     find: find,
     select: select,
   };
 
+  /*
+  Find sub-elements of a service node.
+  */
   function find(second, third) {
     let query = top + `[@id=${second}].second_level`;
     if (third !== undefined) {
@@ -25,33 +27,34 @@ module.exports = function() {
     return oeParser(query);
   };
 
+  /*
+  Select individual service node (id, name, child-count).
+  */
   function select(second, third, fourth) {
     let query = top + `[@id=${second}].second_level`;
-
     if (third !== undefined) {
       query += `[@id=${third}]`;
     }
     if (fourth !== undefined) {
       query += `.third_level[@id=${fourth}]`;
     }
-
     let result = jsonQuery(query, { data: oe });
     let node = {
-      id: result.value['@id'],
+      id: result.value['@id'].replace(/-/, ' '),
       title: result.value['@title'],
       count: 0,
     };
-
     if (third && !fourth) {
       try {
         node.count = result.value.third_level.length;
-      } catch (ex) {
-
-      }
+      } catch (ex) { }
     }
     return node;
   };
 
+  /*
+  Loop and Parse address for child nodes.
+  */
   function oeParser(q) {
     let result = jsonQuery(q, { data: oe });
     let arrResult = new Array();

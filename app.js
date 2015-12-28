@@ -42,12 +42,20 @@ router.post('/sms', function *(next) {
         // Found Array of results.
         if (Array.isArray(obj)) {
           let txt = '';
+          let top = false;
           for (var i = 0; i < obj.length; i++) {
+            if (obj[i].id.length == 3) {
+              top = true;
+            }
             txt += `${obj[i].id} (${obj[i].title})`;
             if (obj[i].count) {
               txt += `(${obj[i].count})`;
             }
             txt += '\n';
+          }
+          if (top) {
+            txt += '\n';
+            txt += ` 'Show [number]' - Get a sub-categorized list of Services.`;
           }
           sms.respond(req, res, txt);
         }
@@ -64,7 +72,8 @@ router.post('/sms', function *(next) {
       .then(function(obj) {
         // Found Second or Third level node.
         ckz.set('serviceid', obj.id, { signed: true });
-        let msg = `You have selected the '${obj.title}' (${(obj.id)}) service!`;
+        let msg = `You have selected the '${obj.title}' (${(obj.id)})`;
+        msg += ` resource!`
         sms.respond(req, res, msg);
       })
       .catch(function(error) {

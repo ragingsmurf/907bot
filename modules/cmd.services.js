@@ -5,75 +5,70 @@ let cmd = require('./cmd')();
 let oe = require('./../modules/oe')();
 let exp = /^[0-9]{3}(\s)?[0-9]{0,2}(\s)?[0-9]{0,2}$/;
 /*
-Find Social Services
+Show: Return nodes based on nested id query.
 */
 function show(query) {
   let p = new Promise(function(resolve, reject) {
-    // Is this a Service ID query
     if (exp.test(query.value)) {
       let arr = query.value.split(' ');
-      let rslt = undefined; // Service Search Results
+      let rslt = undefined;
       if (arr.length === 1) {
-        rslt = oe.find(arr[0]);
+        rslt = oe.find(arr[0]); // One Parameter
         if (rslt.length) {
           resolve(rslt);
         } else {
-          let msg = `Sorry, I can't find services listing for ${arr[0]}!\n\n`;
-          msg += `Try texting 'Show All', to get a complete list.`
+          let msg = `There doesn't appear to be any Social Services listed`;
+          msg += ` for 'Show ${arr[0]}'!\n\n`;
+          msg += `' Show All' - Get a complete list of Social Services.\n`;
           reject(msg);
         }
       }
       if (arr.length === 2) {
         rslt = oe.find(arr[0], `${arr[0]}-${arr[1]}`);
         if (rslt.length === 0) {
-          let msg = `Sorry, the service for '${arr[0]} ${arr[1]}' doesn't `;
-          msg += `appear to have anything nested underneath it.\n\n`;
-          msg += `'Show ${arr[0]}' - get a service list from its parent.\n`;
-          msg += `'Select ${arr[0]} ${arr[1]}' - To start working with it.\n`;
+          let msg = `There doesn't appear to be any Social Services`;
+          msg += ` categorized under 'Show ${arr[0]} ${arr[1]}'\n\n`;
+          msg += `'Select ${arr[0]} ${arr[1]}' - To start managing`
+          msg += ` Services for this resource type.\n\n`;
+          msg += `'Show ${arr[0]}' - Get a complete list of Social Services`;
+          msg += ` for this category.\n`;
           reject(msg);
         } else {
           resolve(rslt);
         }
       }
       if (arr.length === 3) {
-        let msg = `Sorry, the service for '${arr[0]} ${arr[1]} ${arr[2]}`;
-        msg += `doesn't appear to have anything nested underneath it.\n\n`;
-        msg += `'Show ${arr[0]} ${arr[1]}' - get a service list from its parent`
-        msg += `\n`;
-        msg += `'Select ${arr[0]} ${arr[1]} ${arr[2]}' - To start `
-        msg += `working with it.\n`;
+        let msg = `There doesn't appear to be any Social Services`;
+        msg += ` categorized under 'Show ${arr[0]} ${arr[1]} ${arr[2]}'\n\n`;
+        msg += `'Select ${arr[0]} ${arr[1]}' - To start managing`;
+        msg += ` Services for this resource type.\n\n`;
+        msg += `'Show ${arr[0]} ${arr[1]}' - To get a complete list of Social`;
+        msg += ` Services for this category.\n`;
         reject(msg);
       }
     }
-
     if (query.value === 'all') {
       resolve(oe.directory());
     } else {
-      let msg = `No matching services found for '${query.value}'!\n`
-      msg += `Please search by resource ID: 'Show 102'.\n`;
+      let msg = `No matching Social Services IDs were found for`
+      msg += ` 'Show ${query.value}'!\n\n`;
+      msg += ` 'Show All' - Get a complete list of Social Services.\n`;
+      msg += ` 'Show [number]' - Get a sub-categorized list of Services.`;
       reject(msg);
     }
   });
   return p;
 };
 
-let ShowCommand = function(query) {
-  return new cmd.command(
-    function() { return show(query); }, // Execute
-    function() { return undefined; }, // Undo
-    query); // Value
-};
-
 function select(query) {
   let p = new Promise(function(resolve, reject) {
-    // Is this a directory ID query
     if (exp.test(query.value)) {
       let arr = query.value.split(' ');
       let rslt = undefined;
       switch (arr.length) {
         case 1: {
           let one = arr[0];
-          reject(`Sorry, top level service listings are not selectable.`);
+          reject(`Sorry, top level Social Services are not Select-able.`);
           break;
         }
         case 2: {
@@ -101,13 +96,18 @@ function select(query) {
   return p;
 }
 
+let ShowCommand = function(query) {
+  return new cmd.command(
+    function() { return show(query); }, // Execute
+    function() { return undefined; }, // Undo
+    query); // Value
+};
 let SelectCommand = function(query) {
   return new cmd.command(
     function() { return select(query); }, // Execute
     function() { return undefined; }, // Undo
     query); // Value
 };
-
 
 exports.show = ShowCommand;
 exports.select = SelectCommand

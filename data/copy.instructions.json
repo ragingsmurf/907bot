@@ -1,6 +1,6 @@
 {
   "help" : {
-    "instructions": "Help - Bot Commands \n Find 'Service Name' or 'Service ID'"
+    "instructions": "907Bot tracks the availability of Social Services with basic SMS commands.\n\nTo get started, send 'Show All' or 'Show [number]' for a list Social Service categories or sub-categories.\n\nSecond, send 'Select [number]' to start managing resources for that service type."
   },
   "show" : {
     "noparameter": "I need a parameter for your Show request; for example: 'show all'"
