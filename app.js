@@ -1,6 +1,9 @@
 'use strict';
 // jscs:disable requireCapitalizedComments
 
+let mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URL);
+
 // KOA Modules
 let app = require('koa')();
 let session = require('koa-session');
@@ -24,6 +27,7 @@ router.post('/sms', function *(next) {
   let req = this.req;
   let res = this.res;
   let txt = this.request.body.Body;
+  let frm = this.request.body.From;
   let ckz = this.cookies;
   let query = phrase.basic(req, res, txt);
 
@@ -32,7 +36,7 @@ router.post('/sms', function *(next) {
     console.log('Exited SMS routine because there was no valid query object.');
     return false;
   }
-  // 2. Figure out which command, based on parsed query.
+  // 2. Figure out which command.
   switch (query.command) {
     case 'show': {
       // Execute find.
@@ -47,15 +51,16 @@ router.post('/sms', function *(next) {
             if (obj[i].id.length == 3) {
               top = true;
             }
-            txt += `${obj[i].id} (${obj[i].title})`;
+            txt += `[${obj[i].id}] ${obj[i].title}`;
             if (obj[i].count) {
               txt += `(${obj[i].count})`;
             }
             txt += '\n';
           }
           if (top) {
+            txt = `[Social Service Categories]\n` + txt;
             txt += '\n';
-            txt += ` 'Show [number]' - Get a sub-categorized list of Services.`;
+            txt += `'Show [number]' - Get a sub-categorized list of resources.`;
           }
           sms.respond(req, res, txt);
         }
@@ -73,7 +78,7 @@ router.post('/sms', function *(next) {
         // Found Second or Third level node.
         ckz.set('serviceid', obj.id, { signed: true });
         let msg = `You have selected the '${obj.title}' (${(obj.id)})`;
-        msg += ` resource!`
+        msg += ` Social Service resource type!`
         sms.respond(req, res, msg);
       })
       .catch(function(error) {

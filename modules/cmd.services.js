@@ -19,17 +19,17 @@ function show(query) {
         } else {
           let msg = `There doesn't appear to be any Social Services listed`;
           msg += ` for 'Show ${arr[0]}'!\n\n`;
-          msg += `' Show All' - Get a complete list of Social Services.\n`;
+          msg += `'Show All' - Get a complete list of Social Services.\n`;
           reject(msg);
         }
       }
       if (arr.length === 2) {
         rslt = oe.find(arr[0], `${arr[0]}-${arr[1]}`);
         if (rslt.length === 0) {
-          let msg = `There doesn't appear to be any Social Services`;
-          msg += ` categorized under 'Show ${arr[0]} ${arr[1]}'\n\n`;
+          let msg = `There doesn't appear to be any Social Service`;
+          msg += ` sub-categories for 'Show ${arr[0]} ${arr[1]}'\n\n`;
           msg += `'Select ${arr[0]} ${arr[1]}' - To start managing`
-          msg += ` Services for this resource type.\n\n`;
+          msg += ` this resource type.\n\n`;
           msg += `'Show ${arr[0]}' - Get a complete list of Social Services`;
           msg += ` for this category.\n`;
           reject(msg);
@@ -38,10 +38,10 @@ function show(query) {
         }
       }
       if (arr.length === 3) {
-        let msg = `There doesn't appear to be any Social Services`;
-        msg += ` categorized under 'Show ${arr[0]} ${arr[1]} ${arr[2]}'\n\n`;
+        let msg = `There doesn't appear to be any Social Service`;
+        msg += ` sub-categories for 'Show ${arr[0]} ${arr[1]} ${arr[2]}'\n\n`;
         msg += `'Select ${arr[0]} ${arr[1]}' - To start managing`;
-        msg += ` Services for this resource type.\n\n`;
+        msg += ` this resource type.\n\n`;
         msg += `'Show ${arr[0]} ${arr[1]}' - To get a complete list of Social`;
         msg += ` Services for this category.\n`;
         reject(msg);
@@ -50,7 +50,7 @@ function show(query) {
     if (query.value === 'all') {
       resolve(oe.directory());
     } else {
-      let msg = `No matching Social Services IDs were found for`
+      let msg = `No Social Services IDs were found for`
       msg += ` 'Show ${query.value}'!\n\n`;
       msg += ` 'Show All' - Get a complete list of Social Services.\n`;
       msg += ` 'Show [number]' - Get a sub-categorized list of Services.`;
