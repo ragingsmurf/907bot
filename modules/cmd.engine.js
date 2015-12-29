@@ -10,7 +10,7 @@ module.exports = function() {
   let current = 0;
   let commands = [];
   return {
-    commandParser: function(query, req, res, txt, ckz) {
+    commandParser: function*(query, req, res, txt, ckz) {
       // Exit if query wasn't parsed.
       if (!query) {
         // Exited because is was no valid query object.
@@ -21,7 +21,7 @@ module.exports = function() {
         case 'show': {
           // Execute find.
           let result = stack.execute(new services.show(query));
-          stack.getCurrentValue()
+          yield stack.getCurrentValue()
           .then(function(obj) {
             // Found Array of results.
             if (Array.isArray(obj)) {
@@ -43,30 +43,26 @@ module.exports = function() {
                 txt += `'Show [number]'`;
               }
               sms.respond(req, res, txt);
-              sms.process();
             }
           })
           .catch(function(error) {
             sms.respond(req, res, error);
-            sms.process();
           });
           break;
         }
         case 'select': {
           // Execute Select.
           let result = stack.execute(new services.select(query));
-          stack.getCurrentValue()
+          yield stack.getCurrentValue()
           .then(function(obj) {
             // Found Second or Third level node.
             ckz.set('serviceid', obj.id, { signed: true });
             let msg = `You have selected the '${obj.title}' [${(obj.id)}]`;
             msg += ` Social Service resource!`;
             sms.respond(req, res, msg);
-            sms.process();
           })
           .catch(function(error) {
             sms.respond(req, res, error);
-            sms.process();
           });
           break;
         }

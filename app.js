@@ -12,13 +12,15 @@ let router = require('koa-router')();
 
 // 3rd Party Modules
 let Knwl = require('knwl.js');
+// let kw = new Knwl('english');
+// kw.register('times', require('./node_modules/
+// knwl.js/default_plugins/times'));
+// kw.init(txt);
 
 // Internal Modules
-let sms = require('./modules/sms.utility');
 let phrase = require('./modules/phrase.command');
 let engine = require('./modules/cmd.engine')();
-let monUser = require('./modules/mongo.user');
-let copy = require('./data/copy.instructions');
+let user = require('./modules/process.user');
 
 app.keys = ['907Bot'];
 app.use(session(app));
@@ -32,53 +34,25 @@ router.post('/sms', function *(next) {
   let frm = this.request.body.From;
   let ckz = this.cookies;
 
-  // let kw = new Knwl('english');
-  // kw.register('times', require('./node_modules/knwl.js/default_plugins/times'));
-  // kw.init(txt);
-
+  let registered = yield user.registered(frm);
   // 1. Check the incoming phone number, existing user?
-
-  // Check to see if phone number is on file.
-  let user = yield monUser.find(frm);
-  if (user === null) {
-    // Ask the user for their name.
-    if (!ckz.get('state')) {
-      ckz.set('state', 'new');
-      sms.respond(this.req, this.res, copy.help.newuser);
-      sms.process();
-    }
-
-    // New user confirmation on name provided.
-    if (ckz.get('state') === 'new' && txt.toLowerCase() !== 'yes') {
-      ckz.set('temp', txt);
-      sms.respond(this.req, this.res, `Is [${txt}] correct? (yes|no)`);
-      sms.process();
-    } else if (ckz.get('temp')) { // Create user, say thanks!
-      let name = ckz.get('temp');
-      if (name !== undefined) {
-        name = name.replace('"','').replace('"','');
-      }
-      user = yield monUser.create(name, frm);
-      ckz.set('state', undefined);
-      ckz.set('temp', undefined);
-      sms.respond(this.req, this.res, `Thanks [${name}]!`);
-      sms.process();
-    }
+  if (!registered) {
+    yield user.register(req, res, frm, ckz, txt);
   } else {
-    // 2. Convert incoming message to phrase query object.
+    // 2. Convert incoming message to Phrase Query.
     let query = phrase.basic(req, res, txt);
     // 3. Run command parser on incoming queries.
-    engine.commandParser(query, req, res, txt, ckz);
+    yield engine.commandParser(query, req, res, txt, ckz);
   }
 });
 
 // Default Page
 router.get('/', function *() {
-  this.body = '@907bot Service';
+  this.body = '@907bot Social Service Bot';
 });
 
 app.on('error', function(err) {
-  console.log('server error: ' + err);
+  console.log(err);
 });
 
 app.use(router.routes())

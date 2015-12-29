@@ -5,11 +5,11 @@ let Schema = mongoose.Schema;
 
 // Stakeholder User.
 let userSchema = new Schema({
+  _id: {type: String},
   name: { type: String},
-  phoneNumber: String,
-  hours: {
-    start: { type: Number },
-    end: { type: Number },
+  notifications: {
+    startTime: { type: String },
+    endTime: { type: String },
   },
   created: { type: Date, default: Date.now },
   active: { type: Boolean, default: false },

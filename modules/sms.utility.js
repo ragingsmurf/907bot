@@ -22,9 +22,6 @@ exports.respond = function(req, res, body) {
   response = res;
   twiwml = new twilio.TwimlResponse();
   twiwml.message(body);
-}
-
-exports.process = function() {
   response.writeHead(200, {'Content-Type': 'text/xml'});
   response.end(twiwml.toString());
 }
