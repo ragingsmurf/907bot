@@ -1,18 +1,12 @@
 {
   "help" : {
     "instructions": "907Bot tracks the availability of Social Service resources with basic SMS commands.\n\nTo get started, send 'Show All' or 'Show [number]' for a list Social Service categories or sub-categories.\n\nSecond, send 'Select [number]' to start managing resources for that Social Service type.",
-    "newuser": "Hi! It appears you're a new user. Can I get your first and last name?"
+    "newuser": "@908Bot - Hey, I don't recogize your phonenumber. Can I get your first and last name so I know what to call you?"
   },
   "show" : {
-    "noparameter": "I need a parameter for your Show request; for example: 'show all'"
+    "noparameter": "@907Bot - I need a parameter for your Show request, for example: 'show all'"
   },
   "select" : {
-    "noparameter": "I need a parameter for your Select request; for example: 'select 102 04'"
-  },
-  "organization" : {
-    "instructions": "Organizations can be managed by use the following phrases - (add organization|remove organization|update organization)"
-  },
-  "directory" : {
-    "instructions": "The Social Services Directory can be managed by use the following phrases - (show directory|associate organization|remove organization)"
+    "noparameter": "@907Bot - I need a parameter for your Select request, for example: 'select 102 04'"
   }
 }

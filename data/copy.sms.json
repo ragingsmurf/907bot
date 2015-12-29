@@ -1,0 +1,23 @@
+{
+  "services" : [
+  {
+    "name":"show100",
+    "copy": "I don't have any Social Services listed for 'Show {0}'!`."
+  },
+  {
+    "name":"emptysub",
+    "copy": "I don't have any Social Services listed for 'Show {0} {1} {2}'!`"
+  },
+  {
+    "name":"nothingmatched",
+    "copy": "Sorry, nothing matched '{0}'; please use the Show [number] format."
+  },
+  {
+    "name": "rootunselectable",
+    "copy": "Sorry, the top level Social Services are not selectable."
+  },
+  {
+    "name": "notanumber",
+    "copy": "The parameter needs be a [number]"}
+  ]
+}
