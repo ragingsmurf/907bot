@@ -1,10 +1,19 @@
 'use strict';
 
+// jscs:disable disallowMixedSpacesAndTabs
+
+// Third party libraries.
+require('linq-es6');
+let doT = require('./../node_modules/dot/doT.js');
+
 // Internal Modules
-let sms = require('./sms.utility');
 let cmd = require('./cmd')();
+let sms = require('./sms.utility');
 let stack = require('./cmd.stack')();
 let services = require('./cmd.services');
+let copy = require('./../data/copy.sms')
+  .services
+  .asEnumerable();
 
 module.exports = function() {
   let current = 0;
@@ -16,6 +25,16 @@ module.exports = function() {
         // Exited because is was no valid query object.
         return false;
       }
+      // Results template.
+      let bTemp = `
+      [Social Services]\n
+      {{~ it :s }}
+        [{{=s.id}}] {{=s.title}}
+        {{? s.count !== 0 }}
+          ({{=s.count}})
+        {{?}}\n
+      {{~}}`;
+      let cTemp = doT.template(bTemp);
       // 2. Figure out which command.
       switch (query.command) {
         case 'show': {
@@ -23,27 +42,7 @@ module.exports = function() {
           let result = stack.execute(new services.show(query));
           yield stack.getCurrentValue()
           .then(function(obj) {
-            // Found Array of results.
-            if (Array.isArray(obj)) {
-              let txt = '';
-              let top = false;
-              for (var i = 0; i < obj.length; i++) {
-                if (obj[i].id.length == 3) {
-                  top = true;
-                }
-                txt += `[${obj[i].id}] ${obj[i].title}`;
-                if (obj[i].count) {
-                  txt += ` (${obj[i].count})`;
-                }
-                txt += '\n';
-              }
-              if (top) {
-                txt = `[Social Services]\n` + txt;
-                txt += '\n';
-                txt += `'Show [number]'`;
-              }
-              sms.respond(req, res, txt);
-            }
+            sms.respond(req, res, cTemp(obj));
           })
           .catch(function(error) {
             sms.respond(req, res, error);
@@ -56,10 +55,12 @@ module.exports = function() {
           yield stack.getCurrentValue()
           .then(function(obj) {
             // Found Second or Third level node.
-            ckz.set('serviceid', obj.id, { signed: true });
-            let msg = `You have selected the '${obj.title}' [${(obj.id)}]`;
-            msg += ` Social Service resource!`;
-            sms.respond(req, res, msg);
+            ckz.set('resourceid', obj.id, { signed: true });
+            sms.respond(req, res, copy
+              .single(x => x.name == 'selected')
+              .copy
+              .replace('{0}', `${obj.title}`)
+              .replace('{1}', `${(obj.id)}`));
           })
           .catch(function(error) {
             sms.respond(req, res, error);

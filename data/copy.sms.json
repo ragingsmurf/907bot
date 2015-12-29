@@ -19,5 +19,9 @@
   {
     "name": "notanumber",
     "copy": "The parameter needs be a [number]"}
+  ,
+  {
+    "name": "selected",
+    "copy": "You have selected the {0} resource [{1}]."}
   ]
 }
