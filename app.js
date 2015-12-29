@@ -4,6 +4,9 @@
 let mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URL);
 
+// Node Modules
+let fs = require('fs');
+
 // KOA Modules
 let app = require('koa')();
 let session = require('koa-session');
@@ -21,6 +24,7 @@ let Knwl = require('knwl.js');
 let phrase = require('./modules/phrase.command');
 let engine = require('./modules/cmd.engine')();
 let user = require('./modules/process.user');
+let csv = require('./modules/parse.csv')();
 
 app.keys = ['907Bot'];
 app.use(session(app));
@@ -33,6 +37,10 @@ router.post('/sms', function *(next) {
   let txt = this.request.body.Body;
   let frm = this.request.body.From;
   let ckz = this.cookies;
+
+  // test CSV out
+  // csv.parse(data, function(err, data){
+
 
   let registered = yield user.registered(frm);
   // 1. Check the incoming phone number, existing user?
@@ -48,6 +56,8 @@ router.post('/sms', function *(next) {
 
 // Default Page
 router.get('/', function *() {
+  let result = yield csv.parse('./data/charities.csv');
+  console.log(result);
   this.body = '@907bot Social Service Bot';
 });
 
