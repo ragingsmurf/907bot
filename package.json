@@ -26,6 +26,7 @@
   "dependencies": {
     "foreman": "1.4.1",
     "json-query": "1.5.0",
+    "knwl.js": "1.0.2",
     "koa": "1.1.2",
     "koa-bodyparser": "2.0.1",
     "koa-router": "5.3.0",

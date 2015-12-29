@@ -5,6 +5,9 @@ let authToken = process.env.TWILIO_SECRET;
 let twilio = require('twilio');
 let client = new twilio.RestClient(accountSid, authToken);
 
+let response = undefined;
+let twiwml = undefined;
+
 exports.send = function(to, from, body) {
   client.sendMms({
     to: to,
@@ -16,8 +19,12 @@ exports.send = function(to, from, body) {
 }
 
 exports.respond = function(req, res, body) {
-  let resp = new twilio.TwimlResponse();
-  resp.message(body);
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(resp.toString());
+  response = res;
+  twiwml = new twilio.TwimlResponse();
+  twiwml.message(body);
+}
+
+exports.process = function() {
+  response.writeHead(200, {'Content-Type': 'text/xml'});
+  response.end(twiwml.toString());
 }
