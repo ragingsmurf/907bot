@@ -1,11 +1,24 @@
 'use strict';
 
 // jscs:disable disallowMixedSpacesAndTabs
+// jscs:disable maximumLineLength
 
 // Third party libraries.
 require('linq-es6');
 let doT = require('./../node_modules/dot/doT.js');
-
+doT.templateSettings = {
+  evaluate:    /\{\{([\s\S]+?)\}\}/g,
+  interpolate: /\{\{=([\s\S]+?)\}\}/g,
+  encode:      /\{\{!([\s\S]+?)\}\}/g,
+  use:         /\{\{#([\s\S]+?)\}\}/g,
+  define:      /\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}/g,
+  conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}/g,
+  iterate:     /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})/g,
+  varname: 'it',
+  strip: false,
+  append: true,
+  selfcontained: false,
+};
 // Internal Modules
 let cmd = require('./cmd')();
 let sms = require('./sms.utility');
@@ -27,14 +40,10 @@ module.exports = function() {
       }
       // Results template.
       let bTemp = `
-      [Social Services]\n
-      {{~ it :s }}
-        [{{=s.id}}] {{=s.title}}
-        {{? s.count !== 0 }}
-          ({{=s.count}})
-        {{?}}\n
-      {{~}}`;
+[Social Services]
+{{~ it :s }}[{{=s.id}}] {{=s.title}}{{? s.count !== 0 }} ({{=s.count}}){{?}}\n{{~}}`;
       let cTemp = doT.template(bTemp);
+
       // 2. Figure out which command.
       switch (query.command) {
         case 'show': {
