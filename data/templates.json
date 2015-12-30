@@ -1,0 +1,6 @@
+
+{
+  "show" : {
+    "results": "[Social Services]\n{{~ it :s }}[{{=s.id}}] {{=s.title}}{{? s.count !== 0 }} ({{=s.count}}){{?}}\n{{~}}"
+  }
+}

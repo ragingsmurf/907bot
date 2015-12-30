@@ -12,7 +12,13 @@ module.exports = function() {
     csv: function(path) {
       let p = new Promise(function(resolve, reject) {
         require('fs').readFile(path, function(err, data) {
+          if (err) {
+            reject(err);
+          };
           csv.parse(data, {}, function(err, output) {
+            if (err) {
+              reject(err);
+            };
             resolve(output);
           });
         });

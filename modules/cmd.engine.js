@@ -23,6 +23,7 @@ let cmd = require('./cmd')();
 let sms = require('./sms.utility');
 let stack = require('./cmd.stack')();
 let services = require('./cmd.services');
+let temp = require('./../data/templates');
 let copy = require('./../data/copy.sms')
   .services
   .asEnumerable();
@@ -37,12 +38,6 @@ module.exports = function() {
         // Exited because is was no valid query object.
         return false;
       }
-      // Results template.
-      let bTemp = `
-[Social Services]
-{{~ it :s }}[{{=s.id}}] {{=s.title}}{{? s.count !== 0 }} ({{=s.count}}){{?}}\n{{~}}`;
-      let cTemp = doT.template(bTemp);
-
       // 2. Figure out which command.
       switch (query.command) {
         case 'show': {
@@ -50,7 +45,7 @@ module.exports = function() {
           let result = stack.execute(new services.show(query));
           yield stack.getCurrentValue()
           .then(function(obj) {
-            sms.respond(req, res, cTemp(obj));
+            sms.respond(req, res, doT.template(temp.show.results)(obj));
           })
           .catch(function(error) {
             sms.respond(req, res, error);
