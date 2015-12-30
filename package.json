@@ -37,6 +37,7 @@
     "mongoose": "4.3.3",
     "natural": "0.2.1",
     "nodemon": "1.8.1",
-    "twilio": "2.8.0"
+    "twilio": "2.8.0",
+    "weather-js": "1.0.2"
   }
 }

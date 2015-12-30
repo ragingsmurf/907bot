@@ -5,11 +5,13 @@
 require('linq-es6');
 
 let cmd = require('./cmd')();
-let oe = require('./../modules/oe')();
-let exp = /^[0-9]{3}(\s)?[0-9]{0,2}(\s)?[0-9]{0,2}$/;
+let oe = require('./openeligibility')();
 let copy = require('./../data/copy.sms')
   .services
   .asEnumerable();
+
+// Match for '000 00 00' number format.
+const exp = /^[0-9]{3}(\s)?[0-9]{0,2}(\s)?[0-9]{0,2}$/;
 
 /*
 Show: Return nodes based on nested id query.
@@ -18,7 +20,6 @@ function show(query) {
   let p = new Promise(function(resolve, reject) {
     if (exp.test(query.value)) {
       let arr = query.value.split(' ');
-
       if (arr.length === 1) {
         let rslt = oe.find(arr[0]); // One Parameter
         if (rslt.length) {
@@ -27,7 +28,7 @@ function show(query) {
           reject(copy
             .single(x => x.name == 'show100')
             .copy
-            .replace('{0}', `${arr[0]}`));
+            .replace('{0}', arr[0]));
         }
       }
       if (arr.length === 2) {
@@ -36,8 +37,8 @@ function show(query) {
           reject(copy
             .single(x => x.name == 'emptysub')
             .copy
-            .replace('{0}', `${arr[0]}`)
-            .replace('{1}', `${arr[1]}`)
+            .replace('{0}', arr[0])
+            .replace('{1}', arr[1])
             .replace('{2}', ''));
         } else {
           resolve(rslt);
@@ -47,12 +48,12 @@ function show(query) {
         reject(copy
           .single(x => x.name == 'emptysub')
           .copy
-          .replace('{0}', `${arr[0]}`)
-          .replace('{1}', `${arr[1]}`)
-          .replace('{2}', `${arr[2]}`));
+          .replace('{0}', arr[0])
+          .replace('{1}', arr[1])
+          .replace('{2}', arr[2]));
       }
     }
-    // Show root Open Eligibility directory
+    // Return root Open Eligibility directory
     if (query.value === 'all') {
       resolve(oe.directory());
     } else {
@@ -60,7 +61,7 @@ function show(query) {
       reject(copy
         .single(x => x.name == 'nothingmatched')
         .copy
-        .replace('{0}', `${query.value}`));
+        .replace('{0}', query.value));
     }
   });
   return p;
@@ -68,10 +69,8 @@ function show(query) {
 
 function select(query) {
   let p = new Promise(function(resolve, reject) {
-
     if (exp.test(query.value)) {
       let arr = query.value.split(' ');
-
       // individual parameters.
       switch (arr.length) {
         case 1: {

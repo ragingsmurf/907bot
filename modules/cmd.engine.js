@@ -1,5 +1,4 @@
 'use strict';
-
 // jscs:disable disallowMixedSpacesAndTabs
 // jscs:disable maximumLineLength
 

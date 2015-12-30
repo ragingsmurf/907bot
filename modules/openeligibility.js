@@ -3,7 +3,7 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
 let jsonQuery = require('json-query');
-let oe = require('./../data/oe');
+let oe = require('./../data/openeligibility');
 
 module.exports = function() {
   let top = 'taxonomy.top_level';
