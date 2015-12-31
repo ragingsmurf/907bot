@@ -12,7 +12,7 @@ let userSchema = new Schema({
     endTime: { type: String },
   },
   created: { type: Date, default: Date.now },
-  active: { type: Boolean, default: false },
+  enabled: { type: Boolean, default: true },
 });
 
 module.exports = userSchema;

@@ -3,11 +3,12 @@
 let natural = require('./../modules/phrase.natural')();
 let sms = require('./../modules/sms.utility');
 
-exports.basic = function(req, res, message) {
+exports.basic = function(ckz, req, res, message) {
 
   this.req = req;
   this.res = res;
   this.message = message;
+  this.ckz = ckz;
 
   let phrase = natural.stem(this.message);
   let query = {
@@ -20,14 +21,14 @@ exports.basic = function(req, res, message) {
   let copy = require('./../data/copy.instructions');
   switch (phrase[0]) {
     case 'help': {
-      sms.respond(this.req, this.res, copy.help.instructions);
+      sms.respond(this.ckz, this.req, this.res, copy.help.instructions);
       query.command = 'help';
       return query;
       break;
     }
     case 'show': {
       if (phrase.length == 1) {
-        sms.respond(this.req, this.res, copy.show.noparameter);
+        sms.respond(this.ckz, this.req, this.res, copy.show.noparameter);
         query.command = 'show';
         return query;
       } else if (phrase.length >= 2) {
@@ -40,7 +41,7 @@ exports.basic = function(req, res, message) {
     }
     case 'select': {
       if (phrase.length == 1) {
-        sms.respond(this.req, this.res, copy.select.noparameter);
+        sms.respond(this.ckz, this.req, this.res, copy.select.noparameter);
         query.command = 'select';
         return query;
       } else if (phrase.length >= 2) {
@@ -55,7 +56,8 @@ exports.basic = function(req, res, message) {
       break;
     }
     default: {
-      sms.respond(this.req, this.res, `I couldn't find a command. Try "help"`);
+      console.log('phrase.command failed to parse: ' + query.message);
+      // sms.respond(this.ckz, this.req, this.res, `Try "help"`);
       break;
     }
   }

@@ -1,5 +1,6 @@
 'use strict';
 // jscs:disable requireCapitalizedComments
+// jscs:disable maximumLineLength
 
 let mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URL);
@@ -15,6 +16,7 @@ let phrase = require('./modules/phrase.command');
 let engine = require('./modules/cmd.engine')();
 let user = require('./modules/process.user');
 let data = require('./modules/data.sources')();
+let l = require('./modules/logger')();
 
 app.keys = ['907Bot'];
 app.use(session(app));
@@ -29,29 +31,42 @@ router.post('/sms', function *(next) {
   let ckz = this.cookies;
 
   // Message data sets.
-  let carities = yield data.csv('./data/charities.csv');
-  let forecast = yield data.weather('99501');
-  let time = yield data.knwl('7pm');
+  // let forecast = yield data.weather('99501');
+  // let time = yield data.knwl('7pm');
 
-  let registered = yield user.registered(frm);
+  l.c(`Recieved /sms POST from ${frm}.`);
+
   // 1. Check the incoming phone number, existing user?
+  let registered = yield user.registered(frm);
   if (!registered) {
+    l.c(`Unknown number (${frm}), start user registration.`);
+    // 2. Regiser the current phone number.
     yield user.register(req, res, frm, ckz, txt);
   } else {
+    l.c(`Returning user, start query break-down.`);
     // 2. Convert incoming message to Phrase Query.
-    let query = phrase.basic(req, res, txt);
-    // 3. Run command parser on incoming queries.
-    yield engine.commandParser(query, req, res, txt, ckz);
+    let query = phrase.basic(ckz, req, res, txt);
+    let state = ckz.get('state');
+    if (state != undefined) {
+      l.c('State exists, processing it');
+      // 3. Run cookie state.
+      yield engine.cookieParser(query, req, res, frm, txt, ckz);
+    } else {
+      l.c(`Parsing (${txt}) for commands.`);
+      // 3. Parse for commands to execute.
+      yield engine.commandParser(query, req, res, frm, txt, ckz);
+    }
   }
 });
 
 // Default Page
 router.get('/', function *() {
+  l.c('Received / GET')
   this.body = '@907bot Social Service Bot';
 });
 
 app.on('error', function(err) {
-  console.log(err);
+  c.l(err);
 });
 
 app.use(router.routes())

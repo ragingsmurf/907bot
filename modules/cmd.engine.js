@@ -23,7 +23,10 @@ let cmd = require('./cmd')();
 let sms = require('./sms.utility');
 let stack = require('./cmd.stack')();
 let services = require('./cmd.services');
+let organization = require('./process.organization');
+let association = require('./process.association');
 let temp = require('./../data/templates');
+let l = require('./logger')();
 let copy = require('./../data/copy.sms')
   .services
   .asEnumerable();
@@ -32,7 +35,7 @@ module.exports = function() {
   let current = 0;
   let commands = [];
   return {
-    commandParser: function*(query, req, res, txt, ckz) {
+    commandParser: function*(query, req, res, frm, txt, ckz) {
       // Exit if query wasn't parsed.
       if (!query) {
         // Exited because is was no valid query object.
@@ -41,34 +44,96 @@ module.exports = function() {
       // 2. Figure out which command.
       switch (query.command) {
         case 'show': {
-          // Execute find.
+          // Execute show on category.
+          l.c(`Running Show Command.`);
           let result = stack.execute(new services.show(query));
           yield stack.getCurrentValue()
           .then(function(obj) {
-            sms.respond(req, res, doT.template(temp.show.results)(obj));
+            l.c(`Found node for Show Command.`);
+            sms.respond(ckz, req, res, doT.template(temp.show.results)(obj));
           })
           .catch(function(error) {
-            sms.respond(req, res, error);
+            l.c(`Match not found for (${query.message}) sub-category.`);
+            sms.respond(ckz, req, res, error);
           });
           break;
         }
         case 'select': {
           // Execute Select.
+          l.c(`Running Select Command.`);
           let result = stack.execute(new services.select(query));
-          yield stack.getCurrentValue()
-          .then(function(obj) {
-            // Found Second or Third level node.
-            ckz.set('resourceid', obj.id, { signed: true });
-            sms.respond(req, res, copy
-              .single(x => x.name == 'selected')
-              .copy
-              .replace('{0}', `${obj.title}`)
-              .replace('{1}', `${(obj.id)}`));
-          })
-          .catch(function(error) {
-            sms.respond(req, res, error);
-          });
+          try {
+            let oeNode = yield stack.getCurrentValue();
+            let rid = oeNode.id
+              .replace('"', '')
+              .replace('"', '');
+            // Check if user is associated with and organization.
+            let assoc = yield association.orgid(frm);
+            if (assoc.length) {
+              let txt = '';
+              l.c(`Adding social service association to the User.`);
+              let resourceId = ckz.get('resourceId');
+              if (resourceId === undefined) {
+                association.add(frm, rid);
+                txt = `I added (${rid}) to your profile.`;
+              } else {
+                resourceId = resourceId
+                  .replace('"', '')
+                  .replace('"', '');
+                association.add(frm, resourceId);
+                txt = `I added (${resourceId}) to your profile.`;
+              }
+              // Remove cookie.
+              ckz.set('resourceId', undefined);
+
+              // Notify the user
+              sms.respond(ckz, req, res, txt);
+            } else {
+              // Found Second or Third level service node.
+              ckz.set('resourceId', rid);
+              // Ask user to find organization.id.
+              yield organization.find(query, req, res, frm, txt, ckz);
+            }
+          } catch (err) {
+            sms.respond(ckz, req, res, err);
+          } finally {
+
+          }
           break;
+        }
+      }
+    },
+    cookieParser: function*(query, req, res, frm, txt, ckz) {
+      /*
+      cookie index
+      state: nature of the messages
+            /-- Cookie 'State' List --/
+            registration: new user registration.
+            addResource: associate user with resource type.
+            addOrganization: associate user with organization.
+            resourceId: user selects specific resource.
+            undefined: un-used, reset status.
+            temp: temporary value storage between messages.
+      */
+      // Check for the organization.
+      if (ckz.get('state') == 'addOrganization'
+        && ckz.get('temp') == undefined) {
+        yield organization.get(req, res, frm, ckz, txt);
+      } else {
+        if (txt.toLowerCase() == 'yes') {
+          let resourceId = ckz.get('resourceId')
+            .replace('"', '')
+            .replace('"', '');
+          yield association.create(frm, ckz.get('temp'), resourceId);
+          ckz.set('resourceId', undefined);
+          ckz.set('state', undefined);
+          ckz.set('temp', undefined);
+          sms.respond(ckz, req, res, 'I\'ll add the organizational to your profile.');
+        } else {
+          // Clear the cookie
+          ckz.set('temp', undefined);
+          ckz.set('state', undefined);
+          sms.respond(ckz, req, res, 'Ok, I didn\'t add the organization to your profile.');
         }
       }
     },
