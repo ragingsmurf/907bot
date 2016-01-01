@@ -1,12 +1,12 @@
 {
   "help" : {
     "instructions": "907Bot tracks the availability of Social Service resources with basic SMS commands.\n\nTo get started, send 'Show All' or 'Show [number]' for a list Social Service categories or sub-categories.\n\nSecond, send 'Select [number]' to start managing resources for that Social Service type.",
-    "newuser": "@908Bot - Hey, I don't recogize your phonenumber. Can I get your first and last name so I know what to call you?"
+    "newuser": "Hey, I'm the @907Bot. Can I get your name?"
   },
   "show" : {
-    "noparameter": "@907Bot - I need a parameter for your Show request, for example: 'show all'"
+    "noparameter": "I need a parameter for your Show request, for example: 'show all'"
   },
   "select" : {
-    "noparameter": "@907Bot - I need a parameter for your Select request, for example: 'select 102 04'"
+    "noparameter": "I need a parameter for your Select request, for example: 'select 102 04'"
   }
 }

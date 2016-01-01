@@ -70,8 +70,8 @@ module.exports = function() {
             // Check if user is associated with and organization.
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
-              let txt = '';
-              l.c(`Adding social service association to the User.`);
+              let txt = 'empty';
+              l.c(`Adding service association to the user.`);
               let resourceId = ckz.get('resourceId');
               if (resourceId === undefined) {
                 association.add(frm, rid);
@@ -95,7 +95,7 @@ module.exports = function() {
               yield organization.find(query, req, res, frm, txt, ckz);
             }
           } catch (err) {
-            sms.respond(ckz, req, res, err);
+            sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
           } finally {
 
           }
@@ -128,12 +128,12 @@ module.exports = function() {
           ckz.set('resourceId', undefined);
           ckz.set('state', undefined);
           ckz.set('temp', undefined);
-          sms.respond(ckz, req, res, 'I\'ll add the organizational to your profile.');
+          sms.respond(ckz, req, res, 'I added the organization to your profile.');
         } else {
           // Clear the cookie
           ckz.set('temp', undefined);
           ckz.set('state', undefined);
-          sms.respond(ckz, req, res, 'Ok, I didn\'t add the organization to your profile.');
+          sms.respond(ckz, req, res, 'Ok, I skipped adding the organization to your profile.');
         }
       }
     },

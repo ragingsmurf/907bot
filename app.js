@@ -34,12 +34,12 @@ router.post('/sms', function *(next) {
   // let forecast = yield data.weather('99501');
   // let time = yield data.knwl('7pm');
 
-  l.c(`Recieved /sms POST from ${frm}.`);
+  l.c(`Received /sms POST from (${frm}).`);
 
   // 1. Check the incoming phone number, existing user?
   let registered = yield user.registered(frm);
   if (!registered) {
-    l.c(`Unknown number (${frm}), start user registration.`);
+    l.c(`Unknown number (${frm}), start registration.`);
     // 2. Regiser the current phone number.
     yield user.register(req, res, frm, ckz, txt);
   } else {
@@ -48,11 +48,11 @@ router.post('/sms', function *(next) {
     let query = phrase.basic(ckz, req, res, txt);
     let state = ckz.get('state');
     if (state != undefined) {
-      l.c('State exists, processing it');
+      l.c('State exists, process it.');
       // 3. Run cookie state.
       yield engine.cookieParser(query, req, res, frm, txt, ckz);
     } else {
-      l.c(`Parsing (${txt}) for commands.`);
+      l.c(`Parse (${txt}) for commands.`);
       // 3. Parse for commands to execute.
       yield engine.commandParser(query, req, res, frm, txt, ckz);
     }
@@ -66,7 +66,7 @@ router.get('/', function *() {
 });
 
 app.on('error', function(err) {
-  c.l(err);
+  c.l(`app error: ${err}`);
 });
 
 app.use(router.routes())
