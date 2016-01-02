@@ -1,6 +1,7 @@
 'use strict';
 // jscs:disable disallowMixedSpacesAndTabs
 // jscs:disable maximumLineLength
+// jscs:disable requireCapitalizedComments
 
 // Third party libraries.
 require('linq-es6');
@@ -67,7 +68,7 @@ module.exports = function() {
             let rid = oeNode.id
               .replace('"', '')
               .replace('"', '');
-            // Check if user is associated with and organization.
+            // Check if user is associated with an organization.
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
               let txt = 'empty';
@@ -93,6 +94,36 @@ module.exports = function() {
               ckz.set('resourceId', rid);
               // Ask user to find organization.id.
               yield organization.find(query, req, res, frm, txt, ckz);
+            }
+          } catch (err) {
+            sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
+          } finally {
+
+          }
+          break;
+        }
+        case 'remove': {
+          // Execute Select.
+          l.c(`Running Remove Command.`);
+          let result = stack.execute(new services.select(query));
+          try {
+            let oeNode = yield stack.getCurrentValue();
+            let rid = oeNode.id
+              .replace('"', '')
+              .replace('"', '');
+            // Check if the user is associated with an organization.
+            let assoc = yield association.orgid(frm);
+            if (assoc.length) {
+              l.c(`Removing service association from user profile.`);
+              l.c(frm);
+              l.c(rid);
+              association.remove(frm, rid);
+              // Notify the user
+              sms.respond(ckz, req, res, `I removed (${rid}) from your profile.`);
+            } else {
+              let txt = `It doesn't appear you're associated with an organzation.`;
+              // Notify the user
+              sms.respond(ckz, req, res, txt);
             }
           } catch (err) {
             sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');

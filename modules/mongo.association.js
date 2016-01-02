@@ -22,25 +22,21 @@ let AddAssociation = function*(frm, orgid, service) {
 }
 
 let AddService = function(phone, resource) {
-  l.c('yielding mongo.association.AddService');
+  l.c('calling mongo.association.AddService');
   Assoc.findOneAndUpdate({ '_id.phone': { $eq: phone } },
-                          { $addToSet: { service: resource } }, function(err) {
-                            l.c(err);
-                          });
+                          { $addToSet: { service: resource } })
+                          .exec();
 }
 
-// let GetAssocation = function(name) {
-//   let p = new Promise(function(resolve, reject) {
-//     Org.find({name: name}, function(err, org, created) {
-//       if (err) {
-//         reject(err);
-//       }
-//       resolve(org);
-//     });
-//   });
-//   return p;
-// }
+let RemoveService = function(phone, resource) {
+  l.c('calling mongo.association.RemoveService');
+  Assoc.update(
+      { '_id.phone': { $eq: phone } },
+      { $pull: { service: { $in: [ resource ] } } })
+      .exec();
+}
 
 exports.orgid = GetAssociation;
 exports.add = AddAssociation;
-exports.service = AddService;
+exports.subscribe = AddService;
+exports.unsubscribe = RemoveService;

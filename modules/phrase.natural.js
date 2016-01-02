@@ -4,6 +4,7 @@
 require('linq-es6');
 
 let natural = require('natural');
+let l = require('./logger')();
 natural.PorterStemmer.attach();
 natural.Metaphone.attach();
 

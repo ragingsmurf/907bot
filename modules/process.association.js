@@ -24,10 +24,16 @@ let CreateAssociation = function*(orgid, phone, service) {
 };
 
 let AddService = function(phone, resource) {
-  l.c('yielding process.association.AddService');
-  monAssoc.service(phone, resource);
+  l.c('calling process.association.AddService');
+  monAssoc.subscribe(phone, resource);
+}
+
+let RemoveService = function(phone, resource) {
+  l.c('calling process.association.RemoveService');
+  monAssoc.unsubscribe(phone, resource);
 }
 
 exports.orgid = GetAssociatedOrgID;
 exports.create = CreateAssociation;
 exports.add = AddService;
+exports.remove = RemoveService;

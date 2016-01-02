@@ -8,5 +8,8 @@
   },
   "select" : {
     "noparameter": "I need a parameter for your Select request, for example: 'select 102 04'"
+  },
+  "remove" : {
+    "noparameter": "I need a parameter for your Remove request, for example: 'remove 102 04'"
   }
 }
