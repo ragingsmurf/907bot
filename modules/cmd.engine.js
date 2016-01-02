@@ -115,8 +115,6 @@ module.exports = function() {
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
               l.c(`Removing service association from user profile.`);
-              l.c(frm);
-              l.c(rid);
               association.remove(frm, rid);
               // Notify the user
               sms.respond(ckz, req, res, `I removed (${rid}) from your profile.`);

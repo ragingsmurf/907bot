@@ -59,7 +59,7 @@ exports.basic = function(ckz, req, res, message) {
       }
       break;
     }
-    case 'remov': {
+    case 'remov': { // Misspelled as a result of Stemming.
       if (phrase.length == 1) {
         l.c(`remove command found with no parameter.`);
         sms.respond(this.ckz, this.req, this.res, copy.remove.noparameter);
