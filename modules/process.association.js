@@ -18,6 +18,11 @@ let GetAssociatedOrgID = function*(frm) {
   return yield monAssoc.orgid(frm);
 };
 
+let GetAssociatedUsers = function*(resource) {
+  l.c('yielding process.association.GetAssociationOrgID');
+  return yield monAssoc.subscribers(resource);
+}
+
 let CreateAssociation = function*(orgid, phone, service) {
   l.c('yielding process.association.CreateAssociation');
   return yield monAssoc.add(orgid, phone, service);
@@ -35,5 +40,6 @@ let RemoveService = function(phone, resource) {
 
 exports.orgid = GetAssociatedOrgID;
 exports.create = CreateAssociation;
+exports.subscribers = GetAssociatedUsers;
 exports.add = AddService;
 exports.remove = RemoveService;

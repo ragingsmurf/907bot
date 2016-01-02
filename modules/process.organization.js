@@ -23,17 +23,11 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
     let dbOrg = require('./mongo.organization');
     let org = yield dbOrg.get(txt);
 
-    l.c(`Found an organization (${txt}), notify user, ask follow-up.`);
+    l.c(`Found an organization (${txt}), notify user, ask for follow-up.`);
 
-    // We found an Organization.
+    // We found an Organization, write the cookie, as the user.
     ckz.set('temp', org._id); // Save Org ID
     sms.respond(ckz, req, res, copy
-      .single(x => x.name == 'orgfound')
-      .copy
-      .replace('{0}', txt));
-
-    // Follow-up - Can we associate you to this Organization?
-    sms.send(frm, process.env.TWILIO_PHONENUMBER, copy
       .single(x => x.name == 'associateorg')
       .copy
       .replace('{0}', org.name));

@@ -25,16 +25,12 @@
     "copy": "You have selected the {0} resource [{1}]."}
   ,
   {
-    "name": "orgfound",
-    "copy": "Found the organization [{0}]."}
-  ,
-  {
     "name": "orgnotfound",
     "copy": "I wasn't able to find an organization named [{0}]."}
   ,
   {
     "name": "associateorg",
-    "copy": "Would you like to associate [{0}] to your profile? (yes|no)"}
+    "copy": "I found the organization [{0}]. Would you like to associate it to your profile? (yes|no)"}
     ,
   {
     "name": "addorg",

@@ -1,5 +1,6 @@
 'use strict';
 // jscs:disable requireCapitalizedComments
+// jscs:disable maximumLineLength
 
 let monUser = require('./mongo.user');
 let copy = require('./../data/copy.instructions');

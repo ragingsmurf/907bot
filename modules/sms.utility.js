@@ -15,7 +15,7 @@ exports.send = function(to, from, body) {
     from: from,
     body: body,
   }, function(err, confirmation) {
-    l.c(`send error:${err}`);
+    l.c(`send error:${JSON.stringify(err)}`);
   });
 }
 
