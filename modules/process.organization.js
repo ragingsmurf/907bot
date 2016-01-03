@@ -17,13 +17,18 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
   // 1. See if org is in PCG Charity list.
   let pcglist = yield data.csv('./data/charities.csv');
   let charity = [];
-  charity = pcglist.asEnumerable().where(x => x == txt).toArray();
+  charity = pcglist
+    .asEnumerable()
+    .where(x => x[0].toLowerCase() == txt.toLowerCase())
+    .toArray();
   if (charity.length == 1) {
     // Save / Find
     let dbOrg = require('./mongo.organization');
-    let org = yield dbOrg.get(txt);
+    l.c(`Saving charity (${charity[0][0]}) in zipcode (${charity[0][1]}).`);
 
-    l.c(`Found an organization (${txt}), notify user, ask for follow-up.`);
+    let org = yield dbOrg.get(charity[0][0], charity[0][1]);
+
+    l.c(`Found an organization (${charity[0][0]}), notify user.`);
 
     // We found an Organization, write the cookie, as the user.
     ckz.set('temp', org._id); // Save Org ID

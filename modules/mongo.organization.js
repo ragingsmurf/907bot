@@ -1,4 +1,5 @@
 'use strict';
+// jscs:disable maximumLineLength
 
 let mongoose = require('mongoose');
 let findOrCreate = require('mongoose-findorcreate');
@@ -9,10 +10,10 @@ let ssOrg = require('./../models/server.schema.organization')
 // Active model
 let Org = mongoose.model('Organization', ssOrg);
 
-let GetOrganization = function(name) {
+let GetOrganization = function(name, zipcode) {
   l.c('yielding mongo.organization.GetOrganization');
   let p = new Promise(function(resolve, reject) {
-    Org.findOrCreate({name: name}, function(err, org, created) {
+    Org.findOrCreate({name: name, zipcode: zipcode}, function(err, org, created) {
       if (err) {
         reject(err);
       }

@@ -40,7 +40,8 @@ module.exports = function() {
       // Exit if query wasn't parsed.
       if (!query) {
         // Exited because is was no valid query object.
-        return false;
+        l.c(`No command parsed, exiting command parser.`);
+        yield false;
       }
       // 2. Figure out which command.
       switch (query.command) {
@@ -130,9 +131,14 @@ module.exports = function() {
           }
           break;
         }
+        default: {
+          l.c('No command was run!');
+          yield false;
+          break;
+        }
       }
     },
-    cookieParser: function*(query, req, res, frm, txt, ckz) {
+    cookieParser: function*(req, res, frm, txt, ckz) {
       /*
       cookie index
       state: nature of the messages

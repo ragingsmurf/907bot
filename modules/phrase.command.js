@@ -34,14 +34,13 @@ exports.basic = function(ckz, req, res, message) {
         l.c(`show command found with no parameter.`);
         sms.respond(this.ckz, this.req, this.res, copy.show.noparameter);
         query.command = 'show';
-        return query;
       } else if (phrase.length >= 2) {
         delete phrase[0]; // Remove Command from Array
         query.command = 'show';
         query.value = phrase.join(' ').trim();
         l.c(`show command found with parameter (${query.value}).`);
-        return query;
       }
+      return query;
       break;
     }
     case 'select': {
@@ -49,14 +48,13 @@ exports.basic = function(ckz, req, res, message) {
         l.c(`select command found with no parameter.`);
         sms.respond(this.ckz, this.req, this.res, copy.select.noparameter);
         query.command = 'select';
-        return query;
       } else if (phrase.length >= 2) {
         delete phrase[0]; // Remove Command
         query.command = 'select';
         query.value = phrase.join(' ').trim();
         l.c(`select command found with parameter (${query.value}).`);
-        return query;
       }
+      return query;
       break;
     }
     case 'remov': { // Misspelled as a result of Stemming.
@@ -64,18 +62,18 @@ exports.basic = function(ckz, req, res, message) {
         l.c(`remove command found with no parameter.`);
         sms.respond(this.ckz, this.req, this.res, copy.remove.noparameter);
         query.command = 'remove';
-        return query;
       } else if (phrase.length >= 2) {
         delete phrase[0]; // Remove Command
         query.command = 'remove';
         query.value = phrase.join(' ').trim();
         l.c(`remove command found with parameter (${query.value}).`);
-        return query;
       }
+      return query;
       break;
     }
     default: {
       console.log('phrase.command failed to parse: ' + query.message);
+      return false;
       break;
     }
   }

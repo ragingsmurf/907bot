@@ -3,7 +3,7 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-// User/Organization association.
+// User to Organization association.
 let assocSchema = new Schema({
   _id: {
     orgid: { type: Schema.Types.ObjectId },
