@@ -2,11 +2,13 @@
   "commands" : [
   {
     "phrase":["bed", "count"],
+    "instruction": "Send me [bed count [number]] to update the bed count.",
     "resource": "101 04",
     "message": "What is the current [bed count [number]] for [{0}]?"
   },
   {
     "phrase":["overflow", "count"],
+    "instruction": "Send me [overflow count [number]] to update the overflow bed count.",    
     "resource": "101 04",
     "message": "What is the current bed [overflow count [number]] for [{0}]?"
   }

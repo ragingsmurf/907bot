@@ -58,9 +58,9 @@ let FindOrganization = function*(query, req, res, frm, txt, ckz) {
 
 let SelectOrganization = function*(id) {
   l.c('yielding process.organization.SelectOrganization');
-  return yield monOrg.find(id);
+  return yield monOrg.select(id);
 }
 
 exports.get = GetOrganization;
 exports.find = FindOrganization;
-exports.byid = SelectOrganization;
+exports.select = SelectOrganization;

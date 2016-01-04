@@ -30,6 +30,7 @@ let user = require('./process.user');
 let temp = require('./../data/templates');
 let l = require('./logger')();
 let data = require('./data.sources')();
+let cmdres = require('./../data/cmd.resource');
 let copy = require('./../data/copy.sms')
   .services
   .asEnumerable();
@@ -75,18 +76,30 @@ module.exports = function() {
             // Check if user is associated with an organization.
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
-              let txt = 'empty';
+              let txt = '';
               l.c(`Adding service association to the user.`);
               let resourceId = ckz.get('resourceId');
               if (resourceId === undefined) {
                 association.add(frm, rid);
-                txt = `I added (${rid}) to your profile.`;
+                txt = `I added (${rid}) to your profile.\n\n`;
+                let cmds = cmdres.commands.asEnumerable()
+                  .where(x => x.resource === rid)
+                  .toArray();
+                for (var i = 0; i < cmds.length; i++) {
+                  txt += cmds[i].instruction + `\n\n`;
+                };
               } else {
                 resourceId = resourceId
                   .replace('"', '')
                   .replace('"', '');
                 association.add(frm, resourceId);
-                txt = `I added (${resourceId}) to your profile.`;
+                txt = `I added (${resourceId}) to your profile.\n\n`;
+                let cmds = cmdres.commands.asEnumerable()
+                  .where(x => x.resource === resourceId)
+                  .toArray();
+                for (var i = 0; i < cmds.length; i++) {
+                  txt += cmds[i].instruction + `\n\n`;
+                };
               }
               // Remove cookie.
               ckz.set('resourceId', undefined);
@@ -157,7 +170,7 @@ module.exports = function() {
           .toArray()
           .length === 1) {
         // 3. Get the organization associated to the user.
-        let org = yield organization.byid(assoc[0]._id.orgid);
+        let org = yield organization.select(assoc[0]._id.orgid);
         let orgname = org[0].name;
         let orgid = org[0]._id;
         let zipcode = org[0].zipcode;
@@ -168,7 +181,7 @@ module.exports = function() {
         // 4. Save the notification, and temperature to the db.
         let not = yield user.notify(orgid, frm, notify, temp);
         // 5. Let user know of the update.
-        let txt = `Thanks! I update ${orgname} for ${cmdphrase} of ${notify.value}.`;
+        let txt = `Thanks! I update ${orgname} with a ${cmdphrase} of ${notify.value}.`;
         sms.respond(ckz, req, res, txt);
       } else {
         // 2.1 - User isn't associated to the resource.

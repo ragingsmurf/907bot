@@ -38,4 +38,4 @@ let SelectOrganization = function(id) {
 }
 
 exports.get = CreateOrFindOrganization;
-exports.find = SelectOrganization;
+exports.select = SelectOrganization;
