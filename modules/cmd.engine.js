@@ -26,8 +26,10 @@ let stack = require('./cmd.stack')();
 let services = require('./cmd.services');
 let organization = require('./process.organization');
 let association = require('./process.association');
+let user = require('./process.user');
 let temp = require('./../data/templates');
 let l = require('./logger')();
+let data = require('./data.sources')();
 let copy = require('./../data/copy.sms')
   .services
   .asEnumerable();
@@ -38,10 +40,11 @@ module.exports = function() {
   return {
     commandParser: function*(query, req, res, frm, txt, ckz) {
       // Exit if query wasn't parsed.
+
       if (!query) {
-        // Exited because is was no valid query object.
-        l.c(`No command parsed, exiting command parser.`);
-        yield false;
+        // No core commands found.
+        l.c(`No core-commands parsed.`);
+        return false;
       }
       // 2. Figure out which command.
       switch (query.command) {
@@ -133,9 +136,44 @@ module.exports = function() {
         }
         default: {
           l.c('No command was run!');
-          yield false;
+          return false;
           break;
         }
+      }
+    },
+    notificationParser: function*(notify, req, res, frm, txt, ckz) {
+      if (notify.command.length == 0) {
+        // No notification commands found
+        l.c(`No notification commands parsed.`);
+        return false;
+      }
+      // 1. Find out which org the user belongs too.
+      let assoc = yield association.orgid(frm);
+      // 2. Is user subscribed to the service being updated?
+      if (assoc[0]
+          .service
+          .asEnumerable()
+          .where(x => x = notify.resource)
+          .toArray()
+          .length === 1) {
+        // 3. Get the organization associated to the user.
+        let org = yield organization.byid(assoc[0]._id.orgid);
+        let orgname = org[0].name;
+        let orgid = org[0]._id;
+        let zipcode = org[0].zipcode;
+        let cmdphrase = notify.command.join(' ').trim();
+        // 3. Use the zipcode to fetch the temperature.
+        let forecast = yield data.weather(zipcode);
+        let temp = forecast[0].current.feelslike;
+        // 4. Save the notification, and temperature to the db.
+        let not = yield user.notify(orgid, frm, notify, temp);
+        // 5. Let user know of the update.
+        let txt = `Thanks! I update ${orgname} for ${cmdphrase} of ${notify.value}.`;
+        sms.respond(ckz, req, res, txt);
+      } else {
+        // 2.1 - User isn't associated to the resource.
+        let txt = `You're not associated to that resource. Please use 'Select ${notify.resource}'`;
+        sms.respond(ckz, req, res, txt);
       }
     },
     cookieParser: function*(req, res, frm, txt, ckz) {

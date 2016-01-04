@@ -5,18 +5,20 @@
 let monUser = require('./mongo.user');
 let copy = require('./../data/copy.instructions');
 let sms = require('./sms.utility');
+let l = require('./logger')();
 
 let natural = require('natural');
 natural.PorterStemmer.attach();
 
 let Registered = function*(frm) {
+  l.c('yielding process.user.Registered');
   let users = yield monUser.find(frm);
   return (users[0] === undefined ? false : true);
 };
 
 let Register = function*(req, res, frm, ckz, txt) {
+  l.c('yielding process.user.Register');
   let user = undefined;
-
   // Ask the user for their name.
   if (!ckz.get('state')) {
     ckz.set('state', 'registration');
@@ -42,5 +44,11 @@ let Register = function*(req, res, frm, ckz, txt) {
   }
 };
 
+let AddNotification = function*(orgid, frm, notify, temp) {
+  l.c('yielding process.user.AddNotification');
+  return yield monUser.notify(orgid, frm, notify, temp);
+};
+
 exports.registered = Registered;
 exports.register = Register;
+exports.notify = AddNotification;

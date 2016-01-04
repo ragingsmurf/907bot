@@ -5,7 +5,7 @@ require('linq-es6');
 let natural = require('natural');
 natural.PorterStemmer.attach();
 
-let monUser = require('./mongo.organization');
+let monOrg = require('./mongo.organization');
 let sms = require('./sms.utility');
 let data = require('./data.sources')();
 let l = require('./logger')();
@@ -23,10 +23,9 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
     .toArray();
   if (charity.length == 1) {
     // Save / Find
-    let dbOrg = require('./mongo.organization');
     l.c(`Saving charity (${charity[0][0]}) in zipcode (${charity[0][1]}).`);
 
-    let org = yield dbOrg.get(charity[0][0], charity[0][1]);
+    let org = yield monOrg.get(charity[0][0], charity[0][1]);
 
     l.c(`Found an organization (${charity[0][0]}), notify user.`);
 
@@ -57,5 +56,11 @@ let FindOrganization = function*(query, req, res, frm, txt, ckz) {
     .copy);
 };
 
+let SelectOrganization = function*(id) {
+  l.c('yielding process.organization.SelectOrganization');
+  return yield monOrg.find(id);
+}
+
 exports.get = GetOrganization;
 exports.find = FindOrganization;
+exports.byid = SelectOrganization;

@@ -1,5 +1,7 @@
 'use strict';
+// jscs:disable requireCapitalizedComments
 
+require('linq-es6');
 let natural = require('./../modules/phrase.natural')();
 let sms = require('./../modules/sms.utility');
 let l = require('./logger')();
@@ -77,4 +79,44 @@ exports.basic = function(ckz, req, res, message) {
       break;
     }
   }
+}
+
+exports.notice = function(ckz, req, res, message) {
+  this.req = req;
+  this.res = res;
+  this.message = message;
+  this.ckz = ckz;
+
+  l.c(`Parsing notification (${message}) into command query.`);
+
+  let phrase = natural.stem(this.message); // Tokenize and Stem message.
+  let notify = {
+    command: [], // Empty
+    message: this.message, // Original message
+    resource: undefined, // Unknown ID "101 04"
+    phrase: phrase, // Stemmed message
+    value: undefined, // Unknown
+  };
+
+  let cmds = require('./../data/cmd.resource')
+    .commands
+    .asEnumerable();
+  if (phrase.length >= 3) {
+    let cmd = cmds
+      .where(x => x.phrase[0] === phrase[0] && x.phrase[1] === phrase[1])
+      .toArray();
+    if (cmd.length == 1) {
+      notify.command.push(cmd[0].phrase[0]); // bed
+      notify.command.push(cmd[0].phrase[1]); // count
+      notify.resource = cmd[0].resource; // 101 04
+      delete phrase[0]; // Remove First Command
+      delete phrase[1]; // Remove Second Command
+      notify.value = phrase.join(' ').trim();
+      return notify;
+    }
+    return false;
+  } {
+    return false;
+  }
+  return notify;
 }
