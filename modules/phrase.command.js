@@ -1,5 +1,6 @@
 'use strict';
 // jscs:disable requireCapitalizedComments
+// jscs:disable maximumLineLength
 
 require('linq-es6');
 let natural = require('./../modules/phrase.natural')();
@@ -106,12 +107,14 @@ exports.notice = function(ckz, req, res, message) {
       .where(x => x.phrase[0] === phrase[0] && x.phrase[1] === phrase[1])
       .toArray();
     if (cmd.length == 1) {
+
       notify.command.push(cmd[0].phrase[0]); // bed
       notify.command.push(cmd[0].phrase[1]); // count
       notify.resource = cmd[0].resource; // 101 04
       delete phrase[0]; // Remove First Command
       delete phrase[1]; // Remove Second Command
-      notify.value = phrase.join(' ').trim();
+      let param = phrase.join(' ').trim();
+      notify.value = (parseInt(param) !== NaN) ? parseInt(param) : param;
       return notify;
     }
     return false;

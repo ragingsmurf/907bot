@@ -76,34 +76,19 @@ module.exports = function() {
             // Check if user is associated with an organization.
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
-              let txt = '';
-              l.c(`Adding service association to the user.`);
-              let resourceId = ckz.get('resourceId');
-              if (resourceId === undefined) {
-                association.add(frm, rid);
-                txt = `I added (${rid}) to your profile.\n\n`;
-                let cmds = cmdres.commands.asEnumerable()
-                  .where(x => x.resource === rid)
-                  .toArray();
-                for (var i = 0; i < cmds.length; i++) {
-                  txt += cmds[i].instruction + `\n\n`;
-                };
-              } else {
-                resourceId = resourceId
-                  .replace('"', '')
-                  .replace('"', '');
-                association.add(frm, resourceId);
-                txt = `I added (${resourceId}) to your profile.\n\n`;
-                let cmds = cmdres.commands.asEnumerable()
-                  .where(x => x.resource === resourceId)
-                  .toArray();
-                for (var i = 0; i < cmds.length; i++) {
-                  txt += cmds[i].instruction + `\n\n`;
-                };
-              }
+              l.c(`Adding service resource to the user.`);
+              let resId = (ckz.get('resourceId') == undefined) ? rid : resourceId
+                .replace('"', '')
+                .replace('"', '');
+              // Associate user to resource
+              association.add(frm, resId);
+              let cmds = cmdres.commands
+                .asEnumerable()
+                .where(x => x.resource === resId)
+                .toArray();
+              let txt = doT.template(temp.select.results)({ rid: rid, cmds: cmds });
               // Remove cookie.
               ckz.set('resourceId', undefined);
-
               // Notify the user
               sms.respond(ckz, req, res, txt);
             } else {
@@ -162,7 +147,7 @@ module.exports = function() {
       }
       // 1. Find out which org the user belongs too.
       let assoc = yield association.orgid(frm);
-      // 2. Is user subscribed to the service being updated?
+      // 2. Is user subscribed to the service being notified?
       if (assoc[0]
           .service
           .asEnumerable()
@@ -175,13 +160,13 @@ module.exports = function() {
         let orgid = org[0]._id;
         let zipcode = org[0].zipcode;
         let cmdphrase = notify.command.join(' ').trim();
-        // 3. Use the zipcode to fetch the temperature.
+        // 3. Use the zipcode to fetch the current temperature.
         let forecast = yield data.weather(zipcode);
         let temp = forecast[0].current.feelslike;
-        // 4. Save the notification, and temperature to the db.
+        // 4. Save the notification details, and temperature to the db.
         let not = yield user.notify(orgid, frm, notify, temp);
-        // 5. Let user know of the update.
-        let txt = `Thanks! I update ${orgname} with a ${cmdphrase} of ${notify.value}.`;
+        // 5. Let the user know the updated took.
+        let txt = `Thanks! I updated ${orgname} with a ${cmdphrase} of ${notify.value}.`;
         sms.respond(ckz, req, res, txt);
       } else {
         // 2.1 - User isn't associated to the resource.

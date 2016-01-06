@@ -2,5 +2,8 @@
 {
   "show" : {
     "results": "[Social Services]\n{{~ it :s }}[{{=s.id}}] {{=s.title}}{{? s.count !== 0 }} ({{=s.count}}){{?}}\n{{~}}"
+  },
+  "select" : {
+    "results":"I added ({{=it.rid}}) to your profile.\n\n{{~ it.cmds :c }}{{=c.instruction}}\n\n{{~}}"
   }
 }
