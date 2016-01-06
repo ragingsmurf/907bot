@@ -182,6 +182,7 @@ module.exports = function() {
             registration: new user registration.
             addResource: associate user with resource type.
             addOrganization: associate user with organization.
+            firstContact: is this the first time number has SMS'd us?
             resourceId: user selects specific resource.
             undefined: un-used, reset status.
             temp: temporary value storage between messages.

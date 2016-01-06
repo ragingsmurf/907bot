@@ -1,6 +1,7 @@
 {
   "help" : {
-    "instructions": "907Bot tracks the availability of Social Service resources with basic SMS commands.\n\nTo get started, send 'Show All' or 'Show [number]' for a list Social Service categories or sub-categories.\n\nSecond, send 'Select [number]' to start managing resources for that Social Service type.",
+    "firstcontact": "Hello, I'm the Social Services @907Bot. I track the availability and status of Social Services in Alaska.\n\nYou can get a list of basic SMS commands that I respond to by texting 'help'.",
+    "instructions": "@907Bot SMS Commands\n\n'Show All' - List service categories.\n\n'Show [number]' - List service sub-categories.\n\n'Select [number]' - Subscribe to a specific service.\n\n'Remove [number]' Unsubscribe from a service.\n\n* More commands will be presented when managing individual services.",
     "newuser": "Hey, I'm the @907Bot. Can I get your name?"
   },
   "show" : {
