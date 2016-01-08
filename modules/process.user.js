@@ -20,10 +20,10 @@ let Register = function*(req, res, frm, ckz, txt) {
   l.c('yielding process.user.Register');
   let user = undefined;
   // Has the user sent a message before?
-  let fc = ckz.get('firstContact5');
+  let fc = ckz.get('firstContact');
   if (fc === undefined) {
     l.c(`First time contact from number (${frm}).`);
-    ckz.set('firstContact5', true);
+    ckz.set('firstContact', true);
     // 2.1 Send help instructions to new users.
     sms.respond(ckz, req, res, copy.help.firstcontact);
   } else {
