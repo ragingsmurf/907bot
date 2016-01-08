@@ -75,7 +75,7 @@ exports.basic = function(ckz, req, res, message) {
       break;
     }
     default: {
-      console.log('phrase.command failed to parse: ' + query.message);
+      l.c('phrase.command failed to parse: ' + query.message);
       return false;
       break;
     }

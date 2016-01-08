@@ -98,7 +98,7 @@ module.exports = function() {
               yield organization.find(query, req, res, frm, txt, ckz);
             }
           } catch (err) {
-            sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
+            sms.respond(ckz, req, res, err);
           } finally {
 
           }
