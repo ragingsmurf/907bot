@@ -45,7 +45,11 @@ let GetActiveNotifications = function*() {
           $first: '$parameter.value',
         },
       },
-    },]);
+    }, {
+      $sort: {
+        name: 1,
+      },
+    }, ]);
 };
 
 exports.notifications = GetActiveNotifications;

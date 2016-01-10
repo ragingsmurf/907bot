@@ -20,24 +20,19 @@
   // Isolation Function
   let main = function() {
     // module code.
-    var socket = io();
-
-    let viewModel = ko.mapping.fromJS({
-      results: [],
-    });
-
+    let socket = io();
+    let vm = {
+      results: ko.observableArray([]),
+    };
     // Server emitted event.
     socket.on('notification', function(data) {
-      let arr = ko.mapping.fromJS({
-        results: data,
-      });
-      viewModel.results.removeAll();
+      let arr = ko.mapping.fromJS({ results: data });
+      vm.results.removeAll();
       for (var i = 0; i < arr.results().length; i++) {
-        console.log(arr.results()[i]);
-        viewModel.results.push(arr.results()[i]);
+        vm.results.push(arr.results()[i]);
       }
     });
-    ko.applyBindings(viewModel, window.document.getElementById('results'));
+    ko.applyBindings(vm, window.document.getElementById('results'));
   };
 
   // Check for module.exports, browser or node load?

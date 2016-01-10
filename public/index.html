@@ -9,6 +9,7 @@
 <body>
   <p>Real-Time Resources</p>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/bower_components/moment/min/moment.min.js"></script>
   <script src="/bower_components/knockout/dist/knockout.js"></script>
   <script src="/bower_components/knockout-mapping-js/build/output/knockout.mapping-latest.js"></script>
   <script src="/public/main.js"></script>
@@ -26,6 +27,8 @@
       <span data-bind='text: $data.name'></span>
       </br>
       <span data-bind='text: $data.value'></span>
+      </br>
+      <span data-bind='text: moment.utc($data.createDate()).local().fromNow()'></span>
       </br>
       <hr>
     </div>
