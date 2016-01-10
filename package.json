@@ -35,13 +35,13 @@
     "koa-router": "5.3.0",
     "koa-session": "3.3.1",
     "koa-static": "2.0.0",
-    "koa.io": "0.0.3",
     "later": "1.2.0",
     "linq-es6": "0.2.1",
     "mongoose": "4.3.3",
     "mongoose-findorcreate": "0.1.2",
     "natural": "0.2.1",
     "nodemon": "1.8.1",
+    "socket.io": "1.4.3",
     "twilio": "2.8.0",
     "weather-js": "1.0.2"
   }
