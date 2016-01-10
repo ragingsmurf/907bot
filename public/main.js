@@ -21,8 +21,8 @@
   let main = function() {
     // module code.
     var socket = io();
-    // Whenever the server emits 'new message'
-    socket.on('sms', function(data) {
+    // Server emitted event.
+    socket.on('notification', function(data) {
       console.log(JSON.stringify(data));
     });
   };
@@ -43,4 +43,4 @@
     return main;
   };
 
-}).call(this);;
+}).call(this);
