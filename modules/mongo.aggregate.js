@@ -48,6 +48,7 @@ let GetActiveNotifications = function*() {
     }, {
       $sort: {
         name: 1,
+        '_id.command': 1,
       },
     }, ]);
 };

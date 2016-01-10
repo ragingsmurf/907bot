@@ -26,9 +26,16 @@
     };
     // Server emitted event.
     socket.on('notification', function(data) {
-      let arr = ko.mapping.fromJS({ results: data });
+      let arr = ko.mapping.fromJS({
+        results: data,
+      });
       vm.results.removeAll();
       for (var i = 0; i < arr.results().length; i++) {
+        arr.results()[i].notice = ko.computed(
+          function() {
+            return arr.results()[i]._id.command()[0]
+            + ' ' + arr.results()[i]._id.command()[1];
+          }, arr.results()[i]);
         vm.results.push(arr.results()[i]);
       }
     });

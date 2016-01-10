@@ -1,38 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>907Bot Dashboard</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>@907Bot Dashboard</title>
+
+  <!-- Bootstrap -->
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body>
-  <p>Real-Time Resources</p>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/bower_components/moment/min/moment.min.js"></script>
-  <script src="/bower_components/knockout/dist/knockout.js"></script>
-  <script src="/bower_components/knockout-mapping-js/build/output/knockout.mapping-latest.js"></script>
-  <script src="/public/main.js"></script>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
       'use strict';
       let mainjs = main.noConflict()();
     });
   </script>
-  <hr>
-  <div id="results">
-    <div data-bind="foreach: $root.results">
-      <span data-bind='text: $data._id.command'></span>
-      </br>
-      <span data-bind='text: $data.name'></span>
-      </br>
-      <span data-bind='text: $data.value'></span>
-      </br>
-      <span data-bind='text: moment.utc($data.createDate()).local().fromNow()'></span>
-      </br>
-      <hr>
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-right">
+          <li role="presentation" class="active"><a href="#">Home</a></li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">@907Bot Dashboard</h3>
     </div>
+    <ul id="results" class="list-group" data-bind="foreach: $root.results">
+      <li class="list-group-item">
+        <h4 data-bind="text: $data.name"></h4>
+        <span class="label label-primary">
+          <i class="fa fa-bed"></i>
+          <span data-bind="text: $data.value"></span>
+        </span>
+        &nbsp;
+        <span data-bind="text: $data.notice().toUpperCase()"></span>
+        <p style="font-family: Courier;">
+          updated
+          <span data-bind='text: moment.utc($data.createDate()).local().fromNow()'></span>
+        </p>
+      </li>
+    </ul>
+    <hr>
+    <div class="row marketing">
+      <div class="col-lg-6">
+        <h4>Real-time results.</h4>
+        <p>Results are polled and pushed from the database.</p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; Alaska Social Service Resources</p>
+    </footer>
+
   </div>
+  <!-- /container -->
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/bower_components/moment/min/moment.min.js"></script>
+  <script src="/bower_components/knockout/dist/knockout.js"></script>
+  <script src="/bower_components/knockout-mapping-js/build/output/knockout.mapping-latest.js"></script>
+  <script src="/public/main.js"></script>
 </body>
 
 </html>
