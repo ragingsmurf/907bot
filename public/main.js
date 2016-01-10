@@ -21,10 +21,23 @@
   let main = function() {
     // module code.
     var socket = io();
+
+    let viewModel = ko.mapping.fromJS({
+      results: [],
+    });
+
     // Server emitted event.
     socket.on('notification', function(data) {
-      console.log(JSON.stringify(data));
+      let arr = ko.mapping.fromJS({
+        results: data,
+      });
+      viewModel.results.removeAll();
+      for (var i = 0; i < arr.results().length; i++) {
+        console.log(arr.results()[i]);
+        viewModel.results.push(arr.results()[i]);
+      }
     });
+    ko.applyBindings(viewModel, window.document.getElementById('results'));
   };
 
   // Check for module.exports, browser or node load?

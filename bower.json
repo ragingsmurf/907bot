@@ -1,0 +1,27 @@
+{
+  "name": "907bot",
+  "description": "Social Services Bot",
+  "main": "index.js",
+  "authors": [
+    "James Davis"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/ragingsmurf/907bot",
+  "moduleType": [
+    "es6",
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "~3.4.0",
+    "knockout-mapping-js": "~2.4.2"
+  },
+  "devDependencies": {}
+}

@@ -5,16 +5,31 @@
   <meta charset="UTF-8">
   <title>907Bot Dashboard</title>
 </head>
+
 <body>
-  <p>Hey, I am some content!</p>
+  <p>Real-Time Resources</p>
   <script src="/socket.io/socket.io.js"></script>
-  <script type="text/javascript" src="/main.js"></script>
+  <script src="/bower_components/knockout/dist/knockout.js"></script>
+  <script src="/bower_components/knockout-mapping-js/build/output/knockout.mapping-latest.js"></script>
+  <script src="/public/main.js"></script>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
       'use strict';
-      console.log('HTML Dom Loaded');
       let mainjs = main.noConflict()();
     });
   </script>
+  <hr>
+  <div id="results">
+    <div data-bind="foreach: $root.results">
+      <span data-bind='text: $data._id.command'></span>
+      </br>
+      <span data-bind='text: $data.name'></span>
+      </br>
+      <span data-bind='text: $data.value'></span>
+      </br>
+      <hr>
+    </div>
+  </div>
 </body>
+
 </html>
