@@ -25,6 +25,7 @@ let GetActiveNotifications = function*() {
       $project: {
         _id: 1,
         name: 1,
+        zipcode: 1,
         'notifications._id.command': 1,
         'notifications.value': 1,
         'notifications.temperature': 1,

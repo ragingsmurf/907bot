@@ -36,20 +36,15 @@
       <ul class="list-group" data-bind="foreach: $root.results">
         <li class="list-group-item">
           <h4 data-bind="text: $data.name"></h4>
-          <hr />
+          <h6 data-bind="text: $data.zipcode"></h6>
           <div data-bind="foreach: notifications" data-bind="visible: $data.notifications().length">
             <p>
               <span class="label label-primary">
                 <i class="fa fa-bed"></i>
                 <span data-bind="text: $data.value"></span>
               </span>&nbsp;
-              <span data-bind="text: $data._id.command()"></span>
+              <span data-bind="text: $data._id.command().join(' ')"></span>
             </p>
-            <p>
-              <i class="fa fa-cloud"></i>
-              <span data-bind="text: $data.temperature"></span> degrees
-            </p>
-
             <p style="font-family: Courier;">
               SMS <i class="fa fa-mobile"></i>
               <span data-bind='text: moment.utc($data.created()).local().fromNow()'></span>
@@ -70,11 +65,10 @@
   <script src="/bower_components/jquery/dist/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-  <script src="/socket.io/socket.io.js"></script>
   <script src="/bower_components/moment/min/moment.min.js"></script>
   <script src="/bower_components/knockout/dist/knockout.js"></script>
   <script src="/bower_components/knockout-mapping-js/build/output/knockout.mapping-latest.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="/public/main.js"></script>
 </body>
 

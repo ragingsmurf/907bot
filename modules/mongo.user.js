@@ -26,14 +26,13 @@ let CreateUser = function*(name, phone) {
   }).save();
 }
 
-let AddNotification = function*(orgid, frm, notify, temp) {
+let AddNotification = function*(orgid, frm, notify) {
   l.c('yielding mongo.user.AddNotification');
   return yield new Notify({
     orgid: mongoose.Types.ObjectId(orgid),
     phone: frm,
     service: notify.resource, // 101 04
     command: notify.command, // ['bed', 'count']
-    temperature: temp, // Temperature in Fahrenheit
     parameter: { value: notify.value }, // User's response
   }).save();
 }

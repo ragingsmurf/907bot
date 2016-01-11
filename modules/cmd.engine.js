@@ -160,11 +160,8 @@ module.exports = function() {
         let orgid = org[0]._id;
         let zipcode = org[0].zipcode;
         let cmdphrase = notify.command.join(' ').trim();
-        // 3. Use the zipcode to fetch the current temperature.
-        let forecast = yield data.weather(zipcode);
-        let temp = forecast[0].current.feelslike;
         // 4. Save the notification details, and temperature to the db.
-        let not = yield user.notify(orgid, frm, notify, temp);
+        let not = yield user.notify(orgid, frm, notify);
         // 5. Let the user know the updated took.
         let txt = `Thanks! I updated ${orgname} with a ${cmdphrase} of ${notify.value}.`;
         sms.respond(ckz, req, res, txt);

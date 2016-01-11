@@ -53,9 +53,9 @@ let Register = function*(req, res, frm, ckz, txt) {
   }
 };
 
-let AddNotification = function*(orgid, frm, notify, temp) {
+let AddNotification = function*(orgid, frm, notify) {
   l.c('yielding process.user.AddNotification');
-  return yield monUser.notify(orgid, frm, notify, temp);
+  return yield monUser.notify(orgid, frm, notify);
 };
 
 exports.registered = Registered;
