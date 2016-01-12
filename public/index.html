@@ -15,7 +15,6 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -38,12 +37,11 @@
           <h4 data-bind="text: $data.name"></h4>
           <h6 data-bind="text: $data.zipcode"></h6>
           <div data-bind="foreach: notifications" data-bind="visible: $data.notifications().length">
-            <p>
-              <span class="label label-primary">
-                <i class="fa fa-bed"></i>
-                <span data-bind="text: $data.value"></span>
-              </span>&nbsp;
+            <p style="font-size : 22px; font-family : courier">
               <span data-bind="text: $data._id.command().join(' ')"></span>
+              </br>
+              <i class="fa fa-bed"></i>
+              [<span data-bind="text: $data.value"></span>]
             </p>
             <p style="font-family: Courier;">
               SMS <i class="fa fa-mobile"></i>
