@@ -2,11 +2,11 @@
   "services" : [
   {
     "name":"show100",
-    "copy": "I don't have any Social Services listed for 'Show {0}'!`."
+    "copy": "I don't have any Social Services for 'Show {0}'!`."
   },
   {
     "name":"emptysub",
-    "copy": "I don't have any Social Services listed for 'Show {0} {1} {2}'!`"
+    "copy": "I don't have any Social Service sub-categories for 'Show {0} {1} {2}'!`"
   },
   {
     "name":"nothingmatched",

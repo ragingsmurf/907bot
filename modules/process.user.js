@@ -47,7 +47,7 @@ let Register = function*(req, res, frm, ckz, txt) {
         user = yield monUser.create(name, frm);
         ckz.set('state', undefined);
         ckz.set('temp', undefined);
-        sms.respond(ckz, req, res, `Thanks [${name}], you are now a registered user!`);
+        sms.respond(ckz, req, res, `Thanks [${name}], you are now a registered user! Use 'help' for a list of bot commands.`);
       }
     }
   }
