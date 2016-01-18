@@ -27,6 +27,7 @@
     "csv": "0.4.6",
     "datejs": "0.0.2",
     "dot": "git+https://github.com/olado/doT.git",
+    "enum": "2.3.0",
     "foreman": "1.4.1",
     "json-query": "1.5.0",
     "knwl.js": "1.0.2",

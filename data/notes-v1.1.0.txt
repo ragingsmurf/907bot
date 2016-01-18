@@ -1,0 +1,34 @@
+
+-- Notes and Specs for v1.1.0
+
+Retool the overly con-formative responses user’s are required to send;
+  (yes|no) when prompted.
+
+-  Add natural language processing to pre-determined response types
+    -yes or no answer (yeah, ok, yep, yes, no, nope, nada)
+
+Changing the default business flow to: Users will be asked to Register
+on the first initial contact, then asked about their organizational affiliation.
+  - Rework cookie and business process flow, force user to register and associate
+  before proceeding to the command process.
+
+Create a PROFILE command so users can review what details we have for them
+(Resource Associations, Organization, SMS Alerts (status: On | Off)).
+  - Create Profile command, return:
+    {
+    'name': 'Jim Davis',
+    'organization': 'Beans Cafe',
+    'resources': ['101 04', '101 04'],
+    'alerts': true,
+    }
+
+Integrate the weather in a meaningful way on the dashboard
+(I am super close on this).
+  -Mockup UI integration, wire up live data.
+  -Cache weather results against 20min window.
+
+Re-work the taxonomy search so it has friendlier API.
+  - Can return the name of resource from the ID.
+
+Re-work the initial broadcast of data to a 'client request' vs.
+a forced push on connect.

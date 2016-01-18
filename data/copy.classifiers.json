@@ -1,17 +1,23 @@
 {
-  "topic" : {
-    "user": [
-      "I would like to register as a user.",
-      "Can I create an account with this service?",
-      "Please register me as a user."],
-    "organization": [
-      "I would like to list my organization.",
-      "Can I register my non-profit organization?",
-      "How do I update my organization's address?"],
-    "directory": [
-      "How do I publish my organization's health and social services available?",
-      "Where can I get a shelter open bed count list?",
-      "Can I get a list of human and health social services?"
+  "interjections": {
+    "yes": [
+      "Yes, Yeah, Ok, Yah, Positive, True"
+    ],
+    "no": [
+      "No, Nope, Nada, Pass, Negative, False"
     ]
-  }
+  },
+  "commands": {
+    "root": [
+      "show, select, subscribe, unsubscribe, remove, follow, unfollow, stop, start"
+    ]
+  },
+  "taxonomy": [{
+    "node": "101-04",
+    "docs": [
+      "bed count",
+      "available beds",
+      "open bed count"
+    ]
+  }]
 }
