@@ -9,14 +9,14 @@ let natural = require('natural');
 natural.PorterStemmer.attach();
 
 // Internal
-let state = require('./cookie.state');
-let sms = require('./sms.utility');
 let phraseN = require('./phrase.natural')();
+let sms = require('./sms.utility');
 let l = require('./logger')();
 
 module.exports = function() {
   return {
     Parser: function*(req, res, frm, txt, ckz) {
+      let state = require('./cookie.state')(ckz);
       if (state.get(ckz)) {
         // 1. Check cookie state
         let step = state.get(ckz);
