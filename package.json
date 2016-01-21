@@ -14,19 +14,22 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "nodemon -x 'mocha -R min'",
     "start": "nf start web=1,worker=1 -p 3000"
   },
   "author": "James Davis",
   "license": "ISC",
   "devDependencies": {
     "mocha": "2.3.4",
+    "supertest": "1.1.0",
+    "supertest-koa-agent": "0.2.1",
     "supervisor": "0.9.1"
   },
   "dependencies": {
     "csv": "0.4.6",
     "datejs": "0.0.2",
     "dot": "git+https://github.com/olado/doT.git",
+    "dotenv": "2.0.0",
     "enum": "2.3.0",
     "foreman": "1.4.1",
     "json-query": "1.5.0",

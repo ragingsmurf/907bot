@@ -25,7 +25,6 @@ let Register = function*(req, res, frm, ckz, txt) {
   let spelling = `Is ${txt} the correct spelling of your name?`;
   let misspelled = `Can I get the correct spelling of your name?`;
 
-
   if (!state.get()) {
     // 1. Ask the user to register with their name.
     state.set(state.states.REGISTER_USER);
