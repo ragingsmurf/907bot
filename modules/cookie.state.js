@@ -44,32 +44,32 @@ module.exports = function(ckz) {
       switch (se.key) {
         case 'UNDEFINED':
           {
-            l.c('Setting state to UNDEFINED');
-            ckz.set('state', state);
+            l.c('Cookie State to UNDEFINED');
+            ckz.set('state', state.value);
             break;
           }
         case 'REGISTER_USER':
           {
-            l.c('Setting state to REGISTER_USER');
-            ckz.set('state', state);
+            l.c('Cookie State to REGISTER_USER');
+            ckz.set('state', state.value);
             break;
           }
         case 'ADD_ORGANIZATION':
           {
-            l.c('Setting state to ADD_ORGANIZATION');
-            ckz.set('state', state);
+            l.c('Cookie State to ADD_ORGANIZATION');
+            ckz.set('state', state.value);
             break;
           }
         case 'SUBSCRIBE_RESOURCE':
           {
             l.c('Setting state to SUBSCRIBE_RESOURCE');
-            ckz.set('state', state);
+            ckz.set('state', state.value);
             break;
           }
         case 'UNSUBSCRIBE_RESOURCE':
           {
             l.c('Setting state to UNSUBSCRIBE_RESOURCE');
-            ckz.set('state', state);
+            ckz.set('state', state.value);
             break;
           }
         default:
@@ -81,18 +81,18 @@ module.exports = function(ckz) {
     },
     getTemp: function() {
       let tmp = ckz.get('temp');
-      l.c(`get temp: ${tmp}`);
+      l.c(`Get temp Cookie: ${tmp}`);
       if (tmp !== undefined) {
         return tmp;
       }
       return undefined;
     },
     setTemp: function(val) {
-      l.c(`set temp: ${val}`);
+      l.c(`Set temp Cookie: ${val}`);
       ckz.set('temp', val);
     },
     reset: function() {
-      l.c('reset state cookie');
+      l.c('Reset State Cookie');
       let self = this;
       self.setTemp(undefined);
       self.set(self.states.UNDEFINED);

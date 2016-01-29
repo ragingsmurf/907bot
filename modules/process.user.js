@@ -2,7 +2,7 @@
 // jscs:disable requireCapitalizedComments
 // jscs:disable maximumLineLength
 
-// Third party libraries.
+// Third party
 require('linq-es6');
 
 // Internal
@@ -43,15 +43,16 @@ let Register = function*(req, res, frm, ckz, txt) {
           l.c(`Creating an account: ${frm}.`);
           user = yield monUser.create(state.getTemp(), frm);
           state.reset();
+          sms.respond(ckz, req, res, 'Thanks!');
         } else {
           sms.respond(ckz, req, res, misspelled);
         }
-      // 1.2 Save last text, ask if correct name.
+        // 1.2 Save last text, ask if correct name.
       } else {
         state.setTemp(txt);
         sms.respond(ckz, req, res, spelling);
       }
-    // 1.2 Not tagged, ask if correct name.
+      // 1.2 Not tagged, ask if correct name.
     } else {
       state.setTemp(txt);
       sms.respond(ckz, req, res, spelling);

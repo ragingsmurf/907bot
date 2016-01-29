@@ -5,5 +5,8 @@ module.exports = function() {
     c: function(msg) {
       console.log(msg);
     },
+    lf: function() {
+      console.log(`\t¯\\_(ツ)_/¯`);
+    },
   };
 }

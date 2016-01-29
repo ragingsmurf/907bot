@@ -1,16 +1,21 @@
 {
-  "help" : {
+  "help": {
     "firstcontact": "Hello, I'm the Social Services @907Bot. I track the availability and status of Social Services in Alaska.\n\nYou can get a list of basic SMS commands that I respond to by texting 'help'.",
     "instructions": "Social Service @907Bot Commands\n\n'Show All' - List service categories.\n\n'Show [number]' - List service sub-categories.\n\n'Select [number]' - Subscribe to a specific service.\n\n'Remove [number]' Unsubscribe from a service.\n\n* More commands will be presented when managing individual services.",
     "newuser": "Hi, I'm the @907Bot. Can I get your name?"
   },
-  "show" : {
+  "register": {
+    "spelling": "Can I get the correct spelling of your name?",
+    "confirm": "Is {0} the correct spelling of your name?",
+    "success": "Thanks {0}, you are now a registered user! Use 'help' for a list of bot instructions."
+  },
+  "show": {
     "noparameter": "I need a parameter for your Show request, for example: 'show all'"
   },
-  "select" : {
+  "select": {
     "noparameter": "I need a parameter for your Select request, for example: 'select 102 04'"
   },
-  "remove" : {
+  "remove": {
     "noparameter": "I need a parameter for your Remove request, for example: 'remove 102 04'"
   }
 }

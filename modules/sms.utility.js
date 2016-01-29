@@ -7,20 +7,21 @@ let client = new twilio.RestClient(accountSid, authToken);
 let l = require('./logger')();
 let response = undefined;
 let twiwml = undefined;
+let responded = false;
 
 exports.send = function(to, from, body) {
-  l.c(`Pushing SMS message.`);
+  l.c(`Sending Twilio request`);
   client.sendMms({
     to: to,
     from: from,
     body: body,
   }, function(err, confirmation) {
-    l.c(`send error:${JSON.stringify(err)}`);
+    l.c(`Twilio Send Error: ${JSON.stringify(err)}`);
   });
 }
 
 exports.respond = function(ckz, req, res, body) {
-  l.c(`Pushing SMS response.`);
+  l.c(`Pushing Twilio response XML.`);
   response = res;
   twiwml = new twilio.TwimlResponse();
   let state = ckz.get('state');
@@ -30,4 +31,7 @@ exports.respond = function(ckz, req, res, body) {
   twiwml.message(body);
   response.writeHead(200, {'Content-Type': 'text/xml'});
   response.end(twiwml.toString());
+  responded = true;
 }
+
+exports.responded = function() { return responded; };
