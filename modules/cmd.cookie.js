@@ -26,8 +26,7 @@ module.exports = function() {
               // sms.respond(ckz, req, res, 'I saved your data (lie)!');
 
               let response = phraseN.tag(txt);
-              l.c(response.tags);
-
+              // l.c(response);
               //
               // // New user confirmation on name provided.
               // if (ckz.get('state') === 'registration' && txt.toLowerCase() !== 'yes') {

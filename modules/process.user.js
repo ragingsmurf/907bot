@@ -24,12 +24,13 @@ let Register = function*(req, res, frm, ckz, txt) {
   let user = undefined;
   let spelling = `Is ${txt} the correct spelling of your name?`;
   let misspelled = `Can I get the correct spelling of your name?`;
-
-  if (!state.get()) {
+  if (!state.get().value) {
+    l.c(`Cookie State: ${state.get().key}`);
     // 1. Ask the user to register with their name.
     state.set(state.states.REGISTER_USER);
     sms.respond(ckz, req, res, copy.help.newuser);
   } else {
+    l.c(`Cookie State: ${state.get().key}`);
     // 1. Check to see what the user sent over.
     let phrase = phraseN.tag(txt);
     let tags = phrase.tags.asEnumerable();

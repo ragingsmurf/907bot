@@ -19,7 +19,6 @@ state: nature of the messages
       temp: temporary value storage between messages.
 */
 module.exports = function(ckz) {
-  l.c('Loading HTTP cookie state');
 
   let StateEnum = new Enum({
     UNDEFINED: 0,
@@ -28,7 +27,6 @@ module.exports = function(ckz) {
     SUBSCRIBE_RESOURCE: 3,
     UNSUBSCRIBE_RESOURCE: 4,
   });
-
   return {
     states: StateEnum,
     get: function() {
@@ -42,6 +40,7 @@ module.exports = function(ckz) {
     set: function(state) {
       let self = this;
       let se = self.states.get(state);
+      l.c(`Set Cookie State: ${se.key}`);
       switch (se.key) {
         case 'UNDEFINED':
           {
@@ -97,6 +96,6 @@ module.exports = function(ckz) {
       let self = this;
       self.setTemp(undefined);
       self.set(self.states.UNDEFINED);
-    }
+    },
   }
 }
