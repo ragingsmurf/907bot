@@ -21,7 +21,7 @@ let AddNotification = function*(orgid, frm, notify) {
 };
 
 let Register = function(req, res, frm, ckz, txt) {
-  l.c('yielding process.user.Register');
+  l.c('running process.user.Register');
   let state = require('./cookie.state')(ckz);
   if (!state.get().value) {
     state.set(state.states.REGISTER_USER);

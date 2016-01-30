@@ -39,45 +39,7 @@ module.exports = function(ckz) {
     },
     set: function(state) {
       let self = this;
-      let se = self.states.get(state);
-      l.c(`Set Cookie State: ${se.key}`);
-      switch (se.key) {
-        case 'UNDEFINED':
-          {
-            l.c('Cookie State to UNDEFINED');
-            ckz.set('state', state.value);
-            break;
-          }
-        case 'REGISTER_USER':
-          {
-            l.c('Cookie State to REGISTER_USER');
-            ckz.set('state', state.value);
-            break;
-          }
-        case 'ADD_ORGANIZATION':
-          {
-            l.c('Cookie State to ADD_ORGANIZATION');
-            ckz.set('state', state.value);
-            break;
-          }
-        case 'SUBSCRIBE_RESOURCE':
-          {
-            l.c('Setting state to SUBSCRIBE_RESOURCE');
-            ckz.set('state', state.value);
-            break;
-          }
-        case 'UNSUBSCRIBE_RESOURCE':
-          {
-            l.c('Setting state to UNSUBSCRIBE_RESOURCE');
-            ckz.set('state', state.value);
-            break;
-          }
-        default:
-          {
-            l.c('SetState passed through to default:');
-            break;
-          }
-      }
+      ckz.set('state', state.value);
     },
     getTemp: function() {
       let tmp = ckz.get('temp');

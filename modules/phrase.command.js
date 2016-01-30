@@ -15,7 +15,7 @@ exports.basic = function(ckz, req, res, message) {
 
   l.c(`Parsing phrase (${message}) into command query.`);
 
-  let phrase = natural.stem(this.message); // Tokenize and Stem message.
+  let phrase = natural.tag(this.message); // Tag and Tokenize message.
   let query = {
     command: undefined, // Unknown
     message: this.message, // Original message
@@ -23,57 +23,64 @@ exports.basic = function(ckz, req, res, message) {
     value: undefined, // Unknown
   };
 
+  let tagged = natural.tag(message);
+  let tags = tagged.tags.asEnumerable();
+  let tag = undefined;
+  // l.c(JSON.stringify(tagged));
+  if (tags.toArray()[0].length === 1) {
+    tag = tags.toArray()[0][0];
+  }
   let copy = require('./../data/copy.instructions');
-  switch (phrase[0]) {
+
+  switch (tag) {
     case 'help': {
-      l.c(`help command found.`);
       sms.respond(this.ckz, this.req, this.res, copy.help.instructions);
       query.command = 'help';
       return query;
       break;
     }
-    case 'show': {
-      if (phrase.length == 1) {
-        l.c(`show command found with no parameter.`);
-        sms.respond(this.ckz, this.req, this.res, copy.show.noparameter);
-        query.command = 'show';
-      } else if (phrase.length >= 2) {
-        delete phrase[0]; // Remove Command from Array
-        query.command = 'show';
-        query.value = phrase.join(' ').trim();
-        l.c(`show command found with parameter (${query.value}).`);
-      }
-      return query;
-      break;
-    }
-    case 'select': {
-      if (phrase.length == 1) {
-        l.c(`select command found with no parameter.`);
-        sms.respond(this.ckz, this.req, this.res, copy.select.noparameter);
-        query.command = 'select';
-      } else if (phrase.length >= 2) {
-        delete phrase[0]; // Remove Command
-        query.command = 'select';
-        query.value = phrase.join(' ').trim();
-        l.c(`select command found with parameter (${query.value}).`);
-      }
-      return query;
-      break;
-    }
-    case 'remov': { // Misspelled as a result of Stemming.
-      if (phrase.length == 1) {
-        l.c(`remove command found with no parameter.`);
-        sms.respond(this.ckz, this.req, this.res, copy.remove.noparameter);
-        query.command = 'remove';
-      } else if (phrase.length >= 2) {
-        delete phrase[0]; // Remove Command
-        query.command = 'remove';
-        query.value = phrase.join(' ').trim();
-        l.c(`remove command found with parameter (${query.value}).`);
-      }
-      return query;
-      break;
-    }
+  //   case 'show': {
+  //     if (phrase.length == 1) {
+  //       l.c(`show command found with no parameter.`);
+  //       sms.respond(this.ckz, this.req, this.res, copy.show.noparameter);
+  //       query.command = 'show';
+  //     } else if (phrase.length >= 2) {
+  //       delete phrase[0]; // Remove Command from Array
+  //       query.command = 'show';
+  //       query.value = phrase.join(' ').trim();
+  //       l.c(`show command found with parameter (${query.value}).`);
+  //     }
+  //     return query;
+  //     break;
+  //   }
+  //   case 'select': {
+  //     if (phrase.length == 1) {
+  //       l.c(`select command found with no parameter.`);
+  //       sms.respond(this.ckz, this.req, this.res, copy.select.noparameter);
+  //       query.command = 'select';
+  //     } else if (phrase.length >= 2) {
+  //       delete phrase[0]; // Remove Command
+  //       query.command = 'select';
+  //       query.value = phrase.join(' ').trim();
+  //       l.c(`select command found with parameter (${query.value}).`);
+  //     }
+  //     return query;
+  //     break;
+  //   }
+  //   case 'remov': { // Misspelled as a result of Stemming.
+  //     if (phrase.length == 1) {
+  //       l.c(`remove command found with no parameter.`);
+  //       sms.respond(this.ckz, this.req, this.res, copy.remove.noparameter);
+  //       query.command = 'remove';
+  //     } else if (phrase.length >= 2) {
+  //       delete phrase[0]; // Remove Command
+  //       query.command = 'remove';
+  //       query.value = phrase.join(' ').trim();
+  //       l.c(`remove command found with parameter (${query.value}).`);
+  //     }
+  //     return query;
+  //     break;
+  //   }
     default: {
       l.c('phrase.command failed to parse: ' + query.message);
       return false;

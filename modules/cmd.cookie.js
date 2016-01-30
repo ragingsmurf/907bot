@@ -23,55 +23,45 @@ module.exports = function() {
       // Parse incoming text message.
       let phrase = phraseN.tag(txt);
       let tags = phrase.tags.asEnumerable();
+      let responded = false;
       switch (state.get(ckz)) {
         case state.states.REGISTER_USER:
           {
-            // 2.1 Was phrase tagged?
+            // 1. Was phrase tagged?
             if (tags.toArray().length !== 0) {
-              // 2.1 Do we have a Yes/No answer?
-              if (tags.where(x => x[0] === 'interjection').toArray().length) {
-                let yn = tags.where(x => x[0] === 'interjection').toArray()[0][1];
-                if (yn == 'yes') {
-                  let tmp = state.getTemp();
-                  yield monUser.create(tmp, frm);
-                  state.reset();
-                  l.c(`Added: ${tmp} from ${frm}`);
-                  sms.respond(ckz, req, res, copy.register.success
-                    .replace('{0}', tmp));
-                } else {
-                  sms.respond(ckz, req, res, copy.register.spelling);
-                }
+              // 1.1 Do we have a Yes/No answer?
+              let yes = tags.where(x => x[0] === 'interjection')
+                .toArray()[0]
+                .asEnumerable()
+                .where(x => x === 'yes')
+                .toArray();
+              if (yes.length === 1) {
+                let tmp = state.getTemp();
+                yield monUser.create(tmp, frm);
+                state.reset();
+                sms.respond(ckz, req, res, copy.register.success
+                  .replace('{0}', tmp));
+                responded = true;
+              } else {
+                sms.respond(ckz, req, res, copy.register.spelling);
+                responded = true;
               }
             } else {
-              // 2.2 Phrase has no tags.
+              // 1.2 Phrase has no tags.
               if (txt.tokenizeAndStem(true).length !== 2) {
                 sms.respond(ckz, req, res, copy.register.firstlast);
+                responded = true;
               } else {
                 state.setTemp(txt);
                 sms.respond(ckz, req, res, copy.register.confirm
                   .replace('{0}', txt));
+                responded = true;
               }
             }
             break;
           }
-        case 'ADD_ORGANIZATION':
-          {
-            l.c('ADD_ORGANIZATION');
-            break;
-          }
-        case 'SUBSCRIBE_RESOURCE':
-          {
-            l.c('SUBSCRIBE_RESOURCE');
-            break;
-          }
-        case 'UNSUBSCRIBE_RESOURCE':
-          {
-            l.c('UNSUBSCRIBE_RESOURCE');
-            break;
-          }
       }
-
-      return sms.responded();
+      return responded;
     },
   }
 };

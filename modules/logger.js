@@ -3,7 +3,7 @@
 module.exports = function() {
   return {
     c: function(msg) {
-      console.log(msg);
+      console.log(`\t${msg}`);
     },
     lf: function() {
       console.log(`\t¯\\_(ツ)_/¯`);

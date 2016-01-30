@@ -37,14 +37,13 @@ describe('Web server', function() {
   });
 });
 
-before('Reset Data', function(done) {
-  User.find({
-    _id: process.env.TEST_PHONENUMBER,
-  }).remove().exec();
-  done();
-});
+describe('Register User', function() {
 
-describe('SMS Register', function() {
+  before('Reset Data', function() {
+    User.find({
+      _id: process.env.TEST_PHONENUMBER,
+    }).remove().exec();
+  });
 
   it('should ask an unknown user for their name', function(done) {
     request(app)
@@ -62,7 +61,6 @@ describe('SMS Register', function() {
       .end(function(err, res) {
         if (err) throw err;
         done();
-        l.lf();
       });
   });
 
@@ -82,7 +80,6 @@ describe('SMS Register', function() {
       .end(function(err, res) {
         if (err) throw err;
         done();
-        l.lf();
       });
   });
 
@@ -101,7 +98,6 @@ describe('SMS Register', function() {
       .end(function(err, res) {
         if (err) throw err;
         done();
-        l.lf();
       });
   });
 
@@ -114,14 +110,11 @@ describe('SMS Register', function() {
         From: user.phone,
       })
       .expect(200)
-      .expect(function(res) {
-        let q = `Can I get the correct spelling`;
-        assert.equal(res.text.toString().includes(q), true);
-      })
       .end(function(err, res) {
         if (err) throw err;
+        let q = `Can I get the correct spelling`;
+        assert.equal(res.text.toString().includes(q), true);
         done();
-        l.lf();
       });
   });
 
@@ -141,7 +134,28 @@ describe('SMS Register', function() {
       .end(function(err, res) {
         if (err) throw err;
         done();
-        l.lf();
+      });
+  });
+
+});
+
+describe('Help System', function() {
+
+  it('should return a list of bot instructions', function(done) {
+    request(app)
+      .post('/sms')
+      .send({
+        Body: 'Help',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        let q = `Commands`;
+        assert.equal(res.text.toString().includes(q), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
       });
   });
 

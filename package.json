@@ -14,7 +14,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nodemon -x 'mocha -R min'",
+    "test": "nodemon -x 'mocha'",
     "start": "nf start web=1,worker=1 -p 3000"
   },
   "author": "James Davis",
