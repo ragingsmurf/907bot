@@ -7,11 +7,27 @@
       "No, Nope, Nada, Pass, Negative, False"
     ]
   },
-  "commands": {
-    "root": [
-      "show, select, subscribe, unsubscribe, remove, follow, unfollow, stop, start"
+  "commands": [{
+    "name": "subscribe",
+    "docs": [
+      "subscribe, follow"
     ]
-  },
+  }, {
+    "name": "unsubscribe",
+    "docs": [
+      "unsubscribe, remove, unfollow"
+    ]
+  }, {
+    "name": "start",
+    "docs": [
+      "begin, start, startup"
+    ]
+  }, {
+    "name": "end",
+    "docs": [
+      "stop, end"
+    ]
+  }],
   "taxonomy": [{
     "node": "101-04",
     "docs": [

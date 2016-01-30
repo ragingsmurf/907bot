@@ -139,13 +139,31 @@ describe('Register User', function() {
 
 });
 
-describe('Help System', function() {
+describe('Help Menu', function() {
 
   it('should return a list of bot instructions', function(done) {
     request(app)
       .post('/sms')
       .send({
         Body: 'Help',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        let q = `Commands`;
+        assert.equal(res.text.toString().includes(q), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('should raise a show command', function(done) {
+    request(app)
+      .post('/sms')
+      .send({
+        Body: 'Subscribe Bed Count',
         From: user.phone,
       })
       .expect(200)

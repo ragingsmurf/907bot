@@ -19,18 +19,20 @@ exports.basic = function(ckz, req, res, message) {
   let query = {
     command: undefined, // Unknown
     message: this.message, // Original message
-    phrase: phrase, // Stemmed message
+    phrase: phrase, // Tagged message
     value: undefined, // Unknown
   };
 
   let tagged = natural.tag(message);
   let tags = tagged.tags.asEnumerable();
   let tag = undefined;
-  // l.c(JSON.stringify(tagged));
+  //
   if (tags.toArray()[0].length === 1) {
     tag = tags.toArray()[0][0];
   }
   let copy = require('./../data/copy.instructions');
+
+  l.c(JSON.stringify(tags.toArray()));
 
   switch (tag) {
     case 'help': {
@@ -39,6 +41,10 @@ exports.basic = function(ckz, req, res, message) {
       return query;
       break;
     }
+  }
+
+  // l.c(JSON.stringify(tagged));
+
   //   case 'show': {
   //     if (phrase.length == 1) {
   //       l.c(`show command found with no parameter.`);
@@ -81,12 +87,12 @@ exports.basic = function(ckz, req, res, message) {
   //     return query;
   //     break;
   //   }
-    default: {
-      l.c('phrase.command failed to parse: ' + query.message);
-      return false;
-      break;
-    }
-  }
+  //   default: {
+  //     l.c('phrase.command failed to parse: ' + query.message);
+  //     return false;
+  //     break;
+  //   }
+  // }
 }
 
 exports.notice = function(ckz, req, res, message) {

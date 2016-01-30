@@ -32,23 +32,20 @@ module.exports = function() {
           message: ['help'],
         };
       }
-
-      // 2. Fill in set of documents to match against.
-
-      // Language devices
+      // 2. Fill classieifer documents to match.
       for (let i = 0; i < docs.interjections.yes.length; i++) {
         tfidf.addDocument(docs.interjections.yes[i], ['interjection', 'yes']);
       }
       for (let i = 0; i < docs.interjections.no.length; i++) {
         tfidf.addDocument(docs.interjections.no[i], ['interjection', 'no']);
       }
-
-      // Match core bot commands.
-      for (let i = 0; i < docs.commands.root.length; i++) {
-        tfidf.addDocument(docs.commands.root[i], ['command']);
-      }
-
-      // Match against a specific taxonomy resources.
+      for (var i = 0; i < docs.commands.asEnumerable().toArray().length; i++) {
+        let node = docs.commands.asEnumerable().toArray()[i]['name'];
+        let rslt = docs.commands.asEnumerable().toArray()[i];
+        for (let d = 0; d < rslt['docs'].length; d++) {
+          tfidf.addDocument(docs.commands[i]['docs'][d], ['command', node]);
+        }
+      };
       for (let i = 0; i < docs.taxonomy.length; i++) {
         let node = docs.taxonomy[i].node;
         for (let d = 0; d < docs.taxonomy[i].docs.length; d++) {
