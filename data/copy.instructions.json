@@ -5,6 +5,7 @@
     "newuser": "Hi, I'm the @907Bot. Can I get your name?"
   },
   "register": {
+    "firstlast": "I was looking for your first and last name.",  
     "spelling": "Can I get the correct spelling of your name?",
     "confirm": "Is {0} the correct spelling of your name?",
     "success": "Thanks {0}, you are now a registered user! Use 'help' for a list of bot instructions."
