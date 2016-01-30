@@ -2,9 +2,6 @@
 // jscs:disable requireCapitalizedComments
 // jscs:disable maximumLineLength
 
-// Third party
-require('linq-es6');
-
 // Internal
 let copy = require('./../data/copy.instructions');
 let phraseN = require('./phrase.natural')();
@@ -18,18 +15,18 @@ let Registered = function*(req, res, frm, ckz) {
   return (users[0] === undefined ? false : true);
 };
 
-let Register = function*(req, res, frm, ckz, txt) {
+let AddNotification = function*(orgid, frm, notify) {
+  l.c('yielding process.user.AddNotification');
+  return yield monUser.notify(orgid, frm, notify);
+};
+
+let Register = function(req, res, frm, ckz, txt) {
   l.c('yielding process.user.Register');
   let state = require('./cookie.state')(ckz);
   if (!state.get().value) {
     state.set(state.states.REGISTER_USER);
     sms.respond(ckz, req, res, copy.help.newuser);
   };
-};
-
-let AddNotification = function*(orgid, frm, notify) {
-  l.c('yielding process.user.AddNotification');
-  return yield monUser.notify(orgid, frm, notify);
 };
 
 exports.registered = Registered;
