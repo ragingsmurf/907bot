@@ -14,6 +14,7 @@ let copy = require('./../data/copy.instructions');
 let phraseN = require('./phrase.natural')();
 let monUser = require('./mongo.user'); // migrate this to process.user
 let organization = require('./process.organization');
+let association = require('./process.association');
 let sms = require('./sms.utility');
 let l = require('./logger')();
 
@@ -64,40 +65,15 @@ module.exports = function() {
           }
         case state.states.ADD_ORGANIZATION:
           {
-
-            // l.c(state.getTemp());
-            // 1. Phrase tagged?
-            // if (tags.toArray().length !== 0) {
-            // // 1.1 Do we have a Yes/No answer?
-            // let yes = tags.where(x => x[0] === 'interjection')
-            //   .toArray()[0]
-            //   .asEnumerable()
-            //   .where(x => x === 'yes')
-            //   .toArray();
-            // if (yes.length === 1) {
-            //   let tmp = state.getTemp();
-            //   state.reset();
-            //   let org = yield organization.select(tmp);
-            //   let n = org[0].name.replace('"', '').replace('"', '');
-            //   sms.respond(ckz, req, res, copy.register.orgadd
-            //     .replace('{0}', n));
-            //   responded = true;
-            // } else {
-            //   sms.respond(ckz, req, res, copy.register.spelling);
-            //   responded = true;
-            // }
-            // } else {
-
             if (state.getTemp() !== undefined) {
-              let org = organization.get(req, res, frm, ckz, txt);
-              if (!org) {
-                // sms.respond(ckz, req, res, 'copy.instructions.orgnotfound');
-                  // .single(x => x.name == 'orgnotfound')
-                  //   .copy
-                  //   .replace('{0}', txt));
+              let org = yield organization.get(req, res, frm, ckz, txt);
+              if (org) {
+                yield association.create(frm, org._id, state.getTemp());
+                sms.respond(ckz, req, res, copy.register.orgadd
+                  .replace('{0}', org.name));
               } else {
-                yield organization.find(req, res, frm, txt, ckz);
-                sms.respond(ckz, req, res, copy.instructions.orgnotfound);
+                sms.respond(ckz, req, res, copy.register.orgnotfound
+                  .replace('{0}', txt));
               }
             }
             responded = true;

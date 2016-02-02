@@ -22,7 +22,6 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
     .asEnumerable()
     .where(x => x[0].toLowerCase() == txt.toLowerCase())
     .toArray();
-
   let org = undefined;
   if (charity.length == 1) {
     // Save / Find

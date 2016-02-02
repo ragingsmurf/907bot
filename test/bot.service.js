@@ -13,11 +13,13 @@ let l = require('./../modules/logger.js')();
 let app = require('./../lib/app').app;
 
 // Model Schemas
+let ssAssoc = require('./../models/server.schema.association');
 let ssOrg = require('./../models/server.schema.organization');
 let ssUser = require('./../models/server.schema.user');
 let ssNotify = require('./../models/server.schema.notification');
 
 // Models
+let Assoc = mongoose.model('Association', ssAssoc);
 let User = mongoose.model('User', ssUser);
 let Notify = mongoose.model('Notification', ssNotify);
 let Org = mongoose.model('Organization', ssOrg);
@@ -45,6 +47,9 @@ describe('Register User', function() {
   before('Reset Data', function() {
     User.find({
       _id: process.env.TEST_PHONENUMBER,
+    }).remove().exec();
+    Assoc.find({
+      '_id.phone': { $eq: process.env.TEST_PHONENUMBER },
     }).remove().exec();
   });
 
@@ -139,54 +144,6 @@ describe('Register User', function() {
       });
   });
 
-  // it('should ask to add an organization by matched name', function(done) {
-  //   request(app)
-  //     .post('/sms')
-  //     .set('Cookie', [`state=2`]) // REGISTER_USER & temp bag
-  //     .send({
-  //       Body: user.organization,
-  //       From: user.phone,
-  //     })
-  //     .expect(200)
-  //     .expect(function(res) {
-  //       assert.equal(res.text.toString().includes(user.organization), true);
-  //     })
-  //     .end(function(err, res) {
-  //       if (err) throw err;
-  //       done();
-  //     });
-  // });
-
-  // it('should not add an organization when not confirmed', function(done) {
-  //   let _id = undefined;
-  //   Org.find({
-  //       name: user.organization,
-  //     })
-  //     .exec()
-  //     .then(function(org) {
-  //       if (org[0]._id) {
-  //         _id = org[0]._id.toString().replace('"', '').replace('"', '');
-  //       }
-  //     }).then(function() {
-  //       request(app)
-  //         .post('/sms')
-  //         .set('Cookie', [`state=2;temp=${_id}`])
-  //         .send({
-  //           Body: 'No',
-  //           From: user.phone,
-  //         })
-  //         .expect(200)
-  //         .expect(function(res) {
-  //           assert.equal(res.text.toString().includes(`spelling`), true);
-  //         })
-  //         .end(function(err, res) {
-  //           if (err) throw err;
-  //           done();
-  //         });
-  //     });
-  //
-  // });
-
   it('should ask for an organization during initial subscribe', function(done) {
 
     request(app)
@@ -205,38 +162,9 @@ describe('Register User', function() {
         done();
       });
 
-    // .set('Cookie', [`state=2;temp=${_id}`])
-    //   let _id = undefined;
-    //   Org.find({
-    //       name: user.organization,
-    //     })
-    //     .exec()
-    //     .then(function(org) {
-    //       if (org[0]._id) {
-    //         _id = org[0]._id.toString().replace('"', '').replace('"', '');
-    //       }
-    //     }).then(function() {
-    //       request(app)
-    //         .post('/sms')
-    //         .set('Cookie', [`state=2;temp=${_id}`])
-    //         .send({
-    //           Body: 'Yes',
-    //           From: user.phone,
-    //         })
-    //         .expect(200)
-    //         .expect(function(res) {
-    //           assert.equal(res.text.toString().includes(user.organization), true);
-    //         })
-    //         .end(function(err, res) {
-    //           if (err) throw err;
-    //           done();
-    //         });
-    //     });
-
   });
 
-  it.skip('should associate user and organization when present', function(done) {
-
+  it('should associate user and organization when present', function(done) {
     request(app)
       .post('/sms')
       .set('Cookie', [`state=2;temp=101-04`])
@@ -247,8 +175,7 @@ describe('Register User', function() {
       .expect(200)
       // .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
       .expect(function(res) {
-        l.c(res.text);
-        assert.equal(res.text.toString().includes('copy'), true);
+        assert.equal(res.text.toString().includes('associated'), true);
       })
       .end(function(err, res) {
         if (err) throw err;

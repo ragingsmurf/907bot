@@ -9,7 +9,7 @@
     "spelling": "Can I get the proper spelling of your name?",
     "confirm": "Is {0} the correct spelling of your name?",
     "success": "Thanks {0}, you are registered! Use 'help' for a list of bot commands.",
-    "orgadd": "Ok, you have been associated to {0} as a user.",
+    "orgadd": "Ok, I have associated {0} to your profile.",
     "orgnotfound": "Sorry, I do not have an organization listed for {0}."
   },
   "show": {
