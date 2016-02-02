@@ -25,8 +25,9 @@ module.exports = function() {
       let phrase = phraseN.tag(txt);
       let tags = phrase.tags.asEnumerable();
       let responded = false;
-      l.c(`State Cookie: ${state.get(ckz)}`);
-      switch (state.get(ckz)) {
+      let st = state.get(ckz);
+      l.c(`Parsing Cookie State: ${st}`);
+      switch (st) {
         case state.states.REGISTER_USER:
           {
             // 1. Phrase tagged?
@@ -40,8 +41,6 @@ module.exports = function() {
               if (yes.length === 1) {
                 let tmp = state.getTemp();
                 yield monUser.create(tmp, frm);
-                // Start Organzation Process
-                state.set(state.states.ADD_ORGANIZATION);
                 sms.respond(ckz, req, res, copy.register.success
                   .replace('{0}', tmp));
                 responded = true;
@@ -65,34 +64,43 @@ module.exports = function() {
           }
         case state.states.ADD_ORGANIZATION:
           {
+
+            // l.c(state.getTemp());
             // 1. Phrase tagged?
-            if (tags.toArray().length !== 0) {
-              // 1.1 Do we have a Yes/No answer?
-              let yes = tags.where(x => x[0] === 'interjection')
-                .toArray()[0]
-                .asEnumerable()
-                .where(x => x === 'yes')
-                .toArray();
-              if (yes.length === 1) {
-                let tmp = state.getTemp();
-                state.reset();
-                let org = yield organization.select(tmp);
-                let n = org[0].name.replace('"', '').replace('"', '');
-                sms.respond(ckz, req, res, copy.register.orgadd
-                  .replace('{0}', n));
-                responded = true;
+            // if (tags.toArray().length !== 0) {
+            // // 1.1 Do we have a Yes/No answer?
+            // let yes = tags.where(x => x[0] === 'interjection')
+            //   .toArray()[0]
+            //   .asEnumerable()
+            //   .where(x => x === 'yes')
+            //   .toArray();
+            // if (yes.length === 1) {
+            //   let tmp = state.getTemp();
+            //   state.reset();
+            //   let org = yield organization.select(tmp);
+            //   let n = org[0].name.replace('"', '').replace('"', '');
+            //   sms.respond(ckz, req, res, copy.register.orgadd
+            //     .replace('{0}', n));
+            //   responded = true;
+            // } else {
+            //   sms.respond(ckz, req, res, copy.register.spelling);
+            //   responded = true;
+            // }
+            // } else {
+
+            if (state.getTemp() !== undefined) {
+              let org = organization.get(req, res, frm, ckz, txt);
+              if (!org) {
+                // sms.respond(ckz, req, res, 'copy.instructions.orgnotfound');
+                  // .single(x => x.name == 'orgnotfound')
+                  //   .copy
+                  //   .replace('{0}', txt));
               } else {
-                sms.respond(ckz, req, res, copy.register.spelling);
-                responded = true;
-              }
-            } else {
-              // 1.2 Not tagged, start organization add.
-              if (state.getTemp() === undefined) {
-                state.set(state.states.ADD_ORGANIZATION);
-                yield organization.get(req, res, frm, ckz, txt);
-                responded = true;
+                yield organization.find(req, res, frm, txt, ckz);
+                sms.respond(ckz, req, res, copy.instructions.orgnotfound);
               }
             }
+            responded = true;
             break;
           }
       }

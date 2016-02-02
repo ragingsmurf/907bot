@@ -34,6 +34,6 @@
     ,
   {
     "name": "addorg",
-    "copy": "Can I get the [name] of the organization you're associated with?"}
+    "copy": "Can I get the name of the organization you are associated to?"}
   ]
 }

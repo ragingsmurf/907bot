@@ -2,6 +2,7 @@
 // jscs:disable disallowMixedSpacesAndTabs
 // jscs:disable maximumLineLength
 // jscs:disable requireCapitalizedComments
+// jscs:disable disallowNewlineBeforeBlockStatements
 
 // Third Party.
 require('linq-es6');
@@ -49,104 +50,167 @@ module.exports = function() {
       }
       let cmd = query.command;
       // 2. Figure out which command.
+      l.c(`running ${query.command} against engine.`);
       switch (cmd) {
-        case 'help': {
-          sms.respond(ckz, req, res, copyins.help.instructions);
-          return true;
-          break;
-        }
-        case 'subscribe': {
-          return true;
-          break;
-        }
-        // case 'show': {
-        //   // Execute show on category.
-        //   l.c(`Running Show Command.`);
-        //   let result = stack.execute(new services.show(query));
-        //   yield stack.getCurrentValue()
-        //   .then(function(obj) {
-        //     l.c(`Found node for Show Command.`);
-        //     sms.respond(ckz, req, res, doT.template(temp.show.results)(obj));
-        //   })
-        //   .catch(function(error) {
-        //     l.c(`Match not found for (${query.message}) sub-category.`);
-        //     sms.respond(ckz, req, res, error);
-        //   });
-        //   break;
-        // }
-        // case 'select': {
-        //   // Execute Select.
-        //   l.c(`Running Select Command.`);
-        //   let result = stack.execute(new services.select(query));
-        //   try {
-        //     let oeNode = yield stack.getCurrentValue();
-        //     let rid = oeNode.id
-        //       .replace('"', '')
-        //       .replace('"', '');
-        //     // Check if user is associated with an organization.
-        //     let assoc = yield association.orgid(frm);
-        //     if (assoc.length) {
-        //       l.c(`Adding service resource to the user.`);
-        //       let resId = (ckz.get('resourceId') == undefined) ? rid : resourceId
-        //         .replace('"', '')
-        //         .replace('"', '');
-        //       // Associate user to resource
-        //       association.add(frm, resId);
-        //       let cmds = cmdres.commands
-        //         .asEnumerable()
-        //         .where(x => x.resource === resId)
-        //         .toArray();
-        //       let txt = doT.template(temp.select.results)({ rid: rid, cmds: cmds });
-        //       // Remove cookie.
-        //       ckz.set('resourceId', undefined);
-        //       // Notify the user
-        //       sms.respond(ckz, req, res, txt);
-        //     } else {
-        //       // Found Second or Third level service node.
-        //       ckz.set('resourceId', rid);
-        //       // Ask user to find organization.id.
-        //       yield organization.find(query, req, res, frm, txt, ckz);
-        //     }
-        //   } catch (err) {
-        //     sms.respond(ckz, req, res, err);
-        //   } finally {
-        //
+        case 'help':
+          {
+            sms.respond(ckz, req, res, copyins.help.instructions);
+            return true;
+            break;
+          }
+        // case 'subscribe':
+        //   {
+        //     sms.respond(ckz, req, res, 'organization');
+        //     return true;
+        //     break;
         //   }
-        //   break;
-        // }
-        // case 'remove': {
-        //   // Execute Select.
-        //   l.c(`Running Remove Command.`);
-        //   let result = stack.execute(new services.select(query));
-        //   try {
-        //     let oeNode = yield stack.getCurrentValue();
-        //     let rid = oeNode.id
-        //       .replace('"', '')
-        //       .replace('"', '');
-        //     // Check if the user is associated with an organization.
-        //     let assoc = yield association.orgid(frm);
-        //     if (assoc.length) {
-        //       l.c(`Removing service association from user profile.`);
-        //       association.remove(frm, rid);
-        //       // Notify the user
-        //       sms.respond(ckz, req, res, `I removed (${rid}) from your profile.`);
-        //     } else {
-        //       let txt = `It doesn't appear you're associated with an organzation.`;
-        //       // Notify the user
-        //       sms.respond(ckz, req, res, txt);
-        //     }
-        //   } catch (err) {
-        //     sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
-        //   } finally {
-        //
-        //   }
-        //   break;
-        // }
-        default: {
-          l.c('cmd engine was not run!');
-          return false;
-          break;
-        }
+        case 'subscribe':
+          {
+            let parsed = false
+            // Execute Select.
+            // let result = stack.execute(new services.select(query));
+            try {
+              // let oeNode = yield stack.getCurrentValue();
+              // let rid = oeNode.id
+              //   .replace('"', '')
+              //   .replace('"', '');
+              // Check if user is associated with an organization.
+
+              let state = require('./cookie.state')(ckz);
+
+              let rid = query.phrase.tags
+                .asEnumerable()
+                .where(x => x[0] === 'resource')
+                .toArray()[0][1];
+
+              let assoc = yield association.orgid(frm);
+              if (assoc.length) {
+                l.c(`Add user org assocation resource to the user.`);
+                let resId = (ckz.get('resourceId') == undefined) ? rid : resourceId
+                  .replace('"', '')
+                  .replace('"', '');
+                // Associate user to resource
+                association.add(frm, rid);
+                let cmds = cmdres.commands
+                  .asEnumerable()
+                  .where(x => x.resource === rid)
+                  .toArray();
+                let list = doT.template(temp.select.results)({
+                  rid: rid,
+                  cmds: cmds,
+                });
+                // Remove cookie.
+                state.reset();
+                // Notify the user
+                sms.respond(ckz, req, res, list);
+                parsed = true;
+              } else {
+                // Save requested resource subscription
+                state.set(state.states.ADD_ORGANIZATION);
+                state.setTemp(rid);
+                // Ask user to find organization.id.
+                sms.respond(ckz, req, res, copyins.register.orgnotfound);
+                parsed = true;
+              }
+            } catch (err) {
+              l.c(err);
+              // sms.respond(ckz, req, res, err);
+              parsed = true;
+            } finally {
+
+            }
+            return parsed;
+            break;
+          }
+          // case 'show': {
+          //   // Execute show on category.
+          //   l.c(`Running Show Command.`);
+          //   let result = stack.execute(new services.show(query));
+          //   yield stack.getCurrentValue()
+          //   .then(function(obj) {
+          //     l.c(`Found node for Show Command.`);
+          //     sms.respond(ckz, req, res, doT.template(temp.show.results)(obj));
+          //   })
+          //   .catch(function(error) {
+          //     l.c(`Match not found for (${query.message}) sub-category.`);
+          //     sms.respond(ckz, req, res, error);
+          //   });
+          //   break;
+          // }
+          // case 'select': {
+          //   // Execute Select.
+          //   l.c(`Running Select Command.`);
+          //   let result = stack.execute(new services.select(query));
+          //   try {
+          //     let oeNode = yield stack.getCurrentValue();
+          //     let rid = oeNode.id
+          //       .replace('"', '')
+          //       .replace('"', '');
+          //     // Check if user is associated with an organization.
+          //     let assoc = yield association.orgid(frm);
+          //     if (assoc.length) {
+          //       l.c(`Adding service resource to the user.`);
+          //       let resId = (ckz.get('resourceId') == undefined) ? rid : resourceId
+          //         .replace('"', '')
+          //         .replace('"', '');
+          //       // Associate user to resource
+          //       association.add(frm, resId);
+          //       let cmds = cmdres.commands
+          //         .asEnumerable()
+          //         .where(x => x.resource === resId)
+          //         .toArray();
+          //       let txt = doT.template(temp.select.results)({ rid: rid, cmds: cmds });
+          //       // Remove cookie.
+          //       ckz.set('resourceId', undefined);
+          //       // Notify the user
+          //       sms.respond(ckz, req, res, txt);
+          //     } else {
+          //       // Found Second or Third level service node.
+          //       ckz.set('resourceId', rid);
+          //       // Ask user to find organization.id.
+          //       yield organization.find(query, req, res, frm, txt, ckz);
+          //     }
+          //   } catch (err) {
+          //     sms.respond(ckz, req, res, err);
+          //   } finally {
+          //
+          //   }
+          //   break;
+          // }
+          // case 'remove': {
+          //   // Execute Select.
+          //   l.c(`Running Remove Command.`);
+          //   let result = stack.execute(new services.select(query));
+          //   try {
+          //     let oeNode = yield stack.getCurrentValue();
+          //     let rid = oeNode.id
+          //       .replace('"', '')
+          //       .replace('"', '');
+          //     // Check if the user is associated with an organization.
+          //     let assoc = yield association.orgid(frm);
+          //     if (assoc.length) {
+          //       l.c(`Removing service association from user profile.`);
+          //       association.remove(frm, rid);
+          //       // Notify the user
+          //       sms.respond(ckz, req, res, `I removed (${rid}) from your profile.`);
+          //     } else {
+          //       let txt = `It doesn't appear you're associated with an organzation.`;
+          //       // Notify the user
+          //       sms.respond(ckz, req, res, txt);
+          //     }
+          //   } catch (err) {
+          //     sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
+          //   } finally {
+          //
+          //   }
+          //   break;
+          // }
+        default:
+          {
+            l.c('cmd engine was not run!');
+            return false;
+            break;
+          }
       }
     },
     notificationParser: function*(notify, req, res, frm, txt, ckz) {

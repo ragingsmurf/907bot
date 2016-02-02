@@ -139,17 +139,116 @@ describe('Register User', function() {
       });
   });
 
-  it('should ask to add an organization by matched name', function(done) {
+  // it('should ask to add an organization by matched name', function(done) {
+  //   request(app)
+  //     .post('/sms')
+  //     .set('Cookie', [`state=2`]) // REGISTER_USER & temp bag
+  //     .send({
+  //       Body: user.organization,
+  //       From: user.phone,
+  //     })
+  //     .expect(200)
+  //     .expect(function(res) {
+  //       assert.equal(res.text.toString().includes(user.organization), true);
+  //     })
+  //     .end(function(err, res) {
+  //       if (err) throw err;
+  //       done();
+  //     });
+  // });
+
+  // it('should not add an organization when not confirmed', function(done) {
+  //   let _id = undefined;
+  //   Org.find({
+  //       name: user.organization,
+  //     })
+  //     .exec()
+  //     .then(function(org) {
+  //       if (org[0]._id) {
+  //         _id = org[0]._id.toString().replace('"', '').replace('"', '');
+  //       }
+  //     }).then(function() {
+  //       request(app)
+  //         .post('/sms')
+  //         .set('Cookie', [`state=2;temp=${_id}`])
+  //         .send({
+  //           Body: 'No',
+  //           From: user.phone,
+  //         })
+  //         .expect(200)
+  //         .expect(function(res) {
+  //           assert.equal(res.text.toString().includes(`spelling`), true);
+  //         })
+  //         .end(function(err, res) {
+  //           if (err) throw err;
+  //           done();
+  //         });
+  //     });
+  //
+  // });
+
+  it('should ask for an organization during initial subscribe', function(done) {
+
     request(app)
       .post('/sms')
-      .set('Cookie', [`state=2`]) // REGISTER_USER & temp bag
       .send({
-        Body: user.organization,
+        Body: 'Subscribe to bed count',
         From: user.phone,
       })
       .expect(200)
+      .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
       .expect(function(res) {
-        assert.equal(res.text.toString().includes(user.organization), true);
+        assert.equal(res.text.toString().includes('organization'), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+
+    // .set('Cookie', [`state=2;temp=${_id}`])
+    //   let _id = undefined;
+    //   Org.find({
+    //       name: user.organization,
+    //     })
+    //     .exec()
+    //     .then(function(org) {
+    //       if (org[0]._id) {
+    //         _id = org[0]._id.toString().replace('"', '').replace('"', '');
+    //       }
+    //     }).then(function() {
+    //       request(app)
+    //         .post('/sms')
+    //         .set('Cookie', [`state=2;temp=${_id}`])
+    //         .send({
+    //           Body: 'Yes',
+    //           From: user.phone,
+    //         })
+    //         .expect(200)
+    //         .expect(function(res) {
+    //           assert.equal(res.text.toString().includes(user.organization), true);
+    //         })
+    //         .end(function(err, res) {
+    //           if (err) throw err;
+    //           done();
+    //         });
+    //     });
+
+  });
+
+  it.skip('should associate user and organization when present', function(done) {
+
+    request(app)
+      .post('/sms')
+      .set('Cookie', [`state=2;temp=101-04`])
+      .send({
+        Body: 'Beans Cafe',
+        From: user.phone,
+      })
+      .expect(200)
+      // .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
+      .expect(function(res) {
+        l.c(res.text);
+        assert.equal(res.text.toString().includes('copy'), true);
       })
       .end(function(err, res) {
         if (err) throw err;
@@ -157,64 +256,6 @@ describe('Register User', function() {
       });
   });
 
-  it('should not add an organization when not confirmed', function(done) {
-    let _id = undefined;
-    Org.find({
-        name: user.organization,
-      })
-      .exec()
-      .then(function(org) {
-        if (org[0]._id) {
-          _id = org[0]._id.toString().replace('"', '').replace('"', '');
-        }
-      }).then(function() {
-        request(app)
-          .post('/sms')
-          .set('Cookie', [`state=2;temp=${_id}`])
-          .send({
-            Body: 'No',
-            From: user.phone,
-          })
-          .expect(200)
-          .expect(function(res) {
-            assert.equal(res.text.toString().includes(`spelling`), true);
-          })
-          .end(function(err, res) {
-            if (err) throw err;
-            done();
-          });
-      });
-
-  });
-
-  it('should add an organization when confirmed', function(done) {
-    let _id = undefined;
-    Org.find({
-        name: user.organization,
-      })
-      .exec()
-      .then(function(org) {
-        if (org[0]._id) {
-          _id = org[0]._id.toString().replace('"', '').replace('"', '');
-        }
-      }).then(function() {
-        request(app)
-          .post('/sms')
-          .set('Cookie', [`state=2;temp=${_id}`])
-          .send({
-            Body: 'Yes',
-            From: user.phone,
-          })
-          .expect(200)
-          .expect(function(res) {
-            assert.equal(res.text.toString().includes(user.organization), true);
-          })
-          .end(function(err, res) {
-            if (err) throw err;
-            done();
-          });
-      });
-  });
 });
 
 describe('Help Menu', function() {

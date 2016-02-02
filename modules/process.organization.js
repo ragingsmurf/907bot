@@ -14,6 +14,7 @@ let copy = require('./../data/copy.sms')
   .asEnumerable();
 
 let GetOrganization = function*(req, res, frm, ckz, txt) {
+  l.c('yielding process.organization.GetOrganization');
   // 1. See if org is in PCG Charity list.
   let pcglist = yield data.csv('./data/charities.csv');
   let charity = [];
@@ -21,40 +22,24 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
     .asEnumerable()
     .where(x => x[0].toLowerCase() == txt.toLowerCase())
     .toArray();
+
+  let org = undefined;
   if (charity.length == 1) {
     // Save / Find
-    l.c(`Saving charity (${charity[0][0]}) in zipcode (${charity[0][1]}).`);
-
-    let org = yield monOrg.get(charity[0][0], charity[0][1]);
-
-    l.c(`Found an organization (${charity[0][0]}), notify user.`);
-
-    // We found an Organization, write the cookie, as the user.
-    ckz.set('temp', org._id); // Save Org ID
-    sms.respond(ckz, req, res, copy
-      .single(x => x.name == 'associateorg')
-      .copy
-      .replace('{0}', org.name));
-
+    l.c(`Persisting organization ${charity[0][0]} in zip ${charity[0][1]}.`);
+    org = yield monOrg.get(charity[0][0], charity[0][1]);
   } else {
-
-    l.c(`No match for organization (${txt}).`);
-
-    // Organization name wasn't found
-    ckz.set('temp', undefined);
-    sms.respond(ckz, req, res, copy
-      .single(x => x.name == 'orgnotfound')
-      .copy
-      .replace('{0}', txt));
+    l.c(`No match for organization ${txt}.`);
   }
+  return org;
 };
 
-let FindOrganization = function*(query, req, res, frm, txt, ckz) {
-  // ckz.set('state', 'addOrganization');
-  sms.respond(ckz, req, res, copy
-    .single(x => x.name == 'addorg')
-    .copy);
-};
+// let FindOrganization = function*(req, res, frm, txt, ckz) {
+//   l.c('yielding process.organization.FindOrganization');
+//   sms.respond(ckz, req, res, copy
+//     .single(x => x.name == 'addorg')
+//     .copy);
+// };
 
 let SelectOrganization = function*(id) {
   l.c('yielding process.organization.SelectOrganization');
@@ -62,5 +47,5 @@ let SelectOrganization = function*(id) {
 }
 
 exports.get = GetOrganization;
-exports.find = FindOrganization;
+// exports.find = FindOrganization;
 exports.select = SelectOrganization;

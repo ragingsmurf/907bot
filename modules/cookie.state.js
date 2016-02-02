@@ -33,28 +33,31 @@ module.exports = function(ckz) {
       let val = ckz.get('state');
       if (val !== undefined) {
         let num = parseInt(val);
+        l.c(`GET State Cookie: ${StateEnum.get(num)}`);
         return StateEnum.get(num);
       }
+      l.c(`GET State Cookie: ${StateEnum.get(0)}`);
       return StateEnum.UNDEFINED;
     },
     set: function(state) {
       let self = this;
+      l.c(`SET State Cookie: ${state}`);
       ckz.set('state', state.value);
     },
     getTemp: function() {
       let tmp = ckz.get('temp');
-      l.c(`(Get) Temp Cookie: ${tmp}`);
+      l.c(`GET Temp Cookie: ${tmp}`);
       if (tmp !== undefined) {
         return tmp;
       }
       return undefined;
     },
     setTemp: function(val) {
-      l.c(`(Set) Temp Cookie: ${val}`);
+      l.c(`SET Temp Cookie: ${val}`);
       ckz.set('temp', val);
     },
     reset: function() {
-      l.c('(Reset) Cookie');
+      l.c('RESET Cookie');
       let self = this;
       self.setTemp(undefined);
       self.set(self.states.UNDEFINED);
