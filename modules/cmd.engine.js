@@ -3,7 +3,7 @@
 // jscs:disable maximumLineLength
 // jscs:disable requireCapitalizedComments
 
-// Third party libraries.
+// Third Party.
 require('linq-es6');
 let doT = require('./../node_modules/dot/doT.js');
 doT.templateSettings = {
@@ -19,7 +19,7 @@ doT.templateSettings = {
   append: true,
   selfcontained: false,
 };
-// Internal Modules
+// Internal
 let cmd = require('./cmd')();
 let sms = require('./sms.utility');
 let stack = require('./cmd.stack')();

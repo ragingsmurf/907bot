@@ -29,7 +29,7 @@ module.exports = function() {
       switch (state.get(ckz)) {
         case state.states.REGISTER_USER:
           {
-            // 1. Was phrase tagged?
+            // 1. Phrase tagged?
             if (tags.toArray().length !== 0) {
               // 1.1 Do we have a Yes/No answer?
               let yes = tags.where(x => x[0] === 'interjection')
@@ -50,7 +50,7 @@ module.exports = function() {
                 responded = true;
               }
             } else {
-              // 1.2 Phrase has no tags.
+              // 1.2 Not tagged, likely user's name.
               if (txt.tokenizeAndStem(true).length !== 2) {
                 sms.respond(ckz, req, res, copy.register.firstlast);
                 responded = true;
@@ -65,7 +65,7 @@ module.exports = function() {
           }
         case state.states.ADD_ORGANIZATION:
           {
-            // 1. Was phrase tagged?
+            // 1. Phrase tagged?
             if (tags.toArray().length !== 0) {
               // 1.1 Do we have a Yes/No answer?
               let yes = tags.where(x => x[0] === 'interjection')
@@ -86,8 +86,8 @@ module.exports = function() {
                 responded = true;
               }
             } else {
+              // 1.2 Not tagged, start organization add.
               if (state.getTemp() === undefined) {
-                // Start Organzation Process
                 state.set(state.states.ADD_ORGANIZATION);
                 yield organization.get(req, res, frm, ckz, txt);
                 responded = true;
