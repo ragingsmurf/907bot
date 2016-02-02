@@ -159,22 +159,41 @@ describe('Help Menu', function() {
       });
   });
 
-  it('should raise a show command', function(done) {
-    request(app)
-      .post('/sms')
-      .send({
-        Body: 'Subscribe Bed Count',
-        From: user.phone,
-      })
-      .expect(200)
-      .expect(function(res) {
-        let q = `Commands`;
-        assert.equal(res.text.toString().includes(q), true);
-      })
-      .end(function(err, res) {
-        if (err) throw err;
-        done();
-      });
-  });
+  // it('should raise a subscribe command', function(done) {
+  //   request(app)
+  //     .post('/sms')
+  //     .send({
+  //       Body: 'Subscribe Bed Count',
+  //       From: user.phone,
+  //     })
+  //     .expect(200)
+  //     .expect(function(res) {
+  //       let q = `Commands`;
+  //       assert.equal(res.text.toString().includes(q), true);
+  //     })
+  //     .end(function(err, res) {
+  //       if (err) throw err;
+  //       done();
+  //     });
+  // });
+
+  // it('should update bed count', function(done) {
+  //   request(app)
+  //     .post('/sms')
+  //     .send({
+  //       Body: 'Bed Count 33',
+  //       From: user.phone,
+  //     })
+  //     .expect(200)
+  //     .expect(function(res) {
+  //       let q = `Commands`;
+  //       assert.equal(res.text.toString().includes(q), true);
+  //     })
+  //     .end(function(err, res) {
+  //       if (err) throw err;
+  //       done();
+  //     });
+  // });
+
 
 });

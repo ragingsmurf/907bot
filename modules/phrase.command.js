@@ -24,38 +24,26 @@ exports.basic = function(ckz, req, res, message) {
     value: undefined, // Unknown
   };
 
-
   let tagged = natural.tag(message);
   let tags = tagged.tags.asEnumerable();
   let tag = undefined;
-
   if (tags.toArray()[0].length === 1) {
     tag = tags.toArray()[0][0];
-  }
-  let copy = require('./../data/copy.instructions');
-
-  // l.c(JSON.stringify(tags.toArray()));
-
-  switch (tag) {
-    case 'help':
-      {
-        sms.respond(this.ckz, this.req, this.res, copy.help.instructions);
-        query.command = 'help';
-        return query;
-        break;
-      }
-  }
-
-  let cmd = tags.where(x => x[0] == 'command').toArray();
-  if (cmd.length !== 0) {
-    query.command = cmd[0][1]
-      .replace('"', '')
-      .replace('"', '');
+    switch (tag) {
+      case 'help':
+        {
+          query.command = 'help';
+          break;
+        }
+    }
+  } else {
+    let cmd = tags.where(x => x[0] == 'command').toArray();
+    if (cmd.length !== 0) {
+      query.command = cmd[0][1].replace('"', '').replace('"', '');
+    }
   }
 
-  // l.c(JSON.stringify(query));
-
-  // l.c(JSON.stringify(tagged));
+  return query;
 
   //   case 'show': {
   //     if (phrase.length == 1) {
