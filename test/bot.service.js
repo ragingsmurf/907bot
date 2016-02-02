@@ -166,7 +166,6 @@ describe('Register User', function() {
       })
       .exec()
       .then(function(org) {
-        l.c('About to replace!');
         if (org[0]._id) {
           _id = org[0]._id.toString().replace('"', '').replace('"', '');
         }

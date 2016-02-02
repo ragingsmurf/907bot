@@ -43,18 +43,18 @@ module.exports = function(ckz) {
     },
     getTemp: function() {
       let tmp = ckz.get('temp');
-      l.c(`Get temp Cookie: ${tmp}`);
+      l.c(`(Get) Temp Cookie: ${tmp}`);
       if (tmp !== undefined) {
         return tmp;
       }
       return undefined;
     },
     setTemp: function(val) {
-      l.c(`Set temp Cookie: ${val}`);
+      l.c(`(Set) Temp Cookie: ${val}`);
       ckz.set('temp', val);
     },
     reset: function() {
-      l.c('Reset State Cookie');
+      l.c('(Reset) Cookie');
       let self = this;
       self.setTemp(undefined);
       self.set(self.states.UNDEFINED);

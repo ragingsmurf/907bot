@@ -93,16 +93,6 @@ module.exports = function() {
                 yield organization.get(req, res, frm, ckz, txt);
                 responded = true;
               }
-              // // 1.2 Phrase has no tags.
-              // if (txt.tokenizeAndStem(true).length !== 2) {
-              //   sms.respond(ckz, req, res, copy.register.firstlast);
-              //   responded = true;
-              // } else {
-              //   state.setTemp(txt);
-              //   sms.respond(ckz, req, res, copy.register.confirm
-              //     .replace('{0}', txt));
-              //   responded = true;
-              // }
             }
             break;
           }
