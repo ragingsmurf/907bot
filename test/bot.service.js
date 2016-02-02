@@ -115,8 +115,7 @@ describe('Register User', function() {
       .expect(200)
       .end(function(err, res) {
         if (err) throw err;
-        let q = `Can I get the correct spelling`;
-        assert.equal(res.text.toString().includes(q), true);
+        assert.equal(res.text.toString().includes(`spelling`), true);
         done();
       });
   });
@@ -158,8 +157,37 @@ describe('Register User', function() {
       });
   });
 
-  it('should add an organization when confirmed', function(done) {
+  it('should not add an organization when not confirmed', function(done) {
+    let _id = undefined;
+    Org.find({
+        name: user.organization,
+      })
+      .exec()
+      .then(function(org) {
+        if (org[0]._id) {
+          _id = org[0]._id.toString().replace('"', '').replace('"', '');
+        }
+      }).then(function() {
+        request(app)
+          .post('/sms')
+          .set('Cookie', [`state=2;temp=${_id}`])
+          .send({
+            Body: 'No',
+            From: user.phone,
+          })
+          .expect(200)
+          .expect(function(res) {
+            assert.equal(res.text.toString().includes(`spelling`), true);
+          })
+          .end(function(err, res) {
+            if (err) throw err;
+            done();
+          });
+      });
 
+  });
+
+  it('should add an organization when confirmed', function(done) {
     let _id = undefined;
     Org.find({
         name: user.organization,
@@ -186,9 +214,7 @@ describe('Register User', function() {
             done();
           });
       });
-
   });
-
 });
 
 describe('Help Menu', function() {

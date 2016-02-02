@@ -6,7 +6,7 @@
   },
   "register": {
     "firstlast": "I was looking for your first and last name.",
-    "spelling": "Can I get the correct spelling of your name?",
+    "spelling": "Can I get a correct spelling of name?",
     "confirm": "Is {0} the correct spelling of your name?",
     "success": "Thanks {0}, you are registered!\nCan I get the name of the organization you are affiliated with?",
     "orgadd": "Ok, you have been added to {0} as a stakeholder."

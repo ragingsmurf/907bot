@@ -65,7 +65,6 @@ module.exports = function() {
           }
         case state.states.ADD_ORGANIZATION:
           {
-            responded = true;
             // 1. Was phrase tagged?
             if (tags.toArray().length !== 0) {
               // 1.1 Do we have a Yes/No answer?
@@ -83,7 +82,7 @@ module.exports = function() {
                   .replace('{0}', n));
                 responded = true;
               } else {
-                sms.respond(ckz, req, res, copy.register.orgadd);
+                sms.respond(ckz, req, res, copy.register.spelling);
                 responded = true;
               }
             } else {
