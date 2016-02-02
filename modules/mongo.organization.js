@@ -12,7 +12,7 @@ let ssOrg = require('./../models/server.schema.organization')
 let Org = mongoose.model('Organization', ssOrg);
 
 let CreateOrFindOrganization = function(name, zipcode) {
-  l.c('yielding mongo.organization.GetOrganization');
+  l.c('yielding mongo.organization.CreateOrFindOrganization');
   let p = new Promise(function(resolve, reject) {
     Org.findOrCreate({name: name, zipcode: zipcode}, function(err, org, created) {
       if (err) {

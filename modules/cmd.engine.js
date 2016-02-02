@@ -47,7 +47,7 @@ module.exports = function() {
         l.c(`No core-commands parsed.`);
         return false;
       }
-      let cmd = query.command.replace('"', '').replace('"', '');
+      let cmd = query.command;
       // 2. Figure out which command.
       switch (cmd) {
         case 'help': {

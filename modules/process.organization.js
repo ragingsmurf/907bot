@@ -50,7 +50,7 @@ let GetOrganization = function*(req, res, frm, ckz, txt) {
 };
 
 let FindOrganization = function*(query, req, res, frm, txt, ckz) {
-  ckz.set('state', 'addOrganization');
+  // ckz.set('state', 'addOrganization');
   sms.respond(ckz, req, res, copy
     .single(x => x.name == 'addorg')
     .copy);

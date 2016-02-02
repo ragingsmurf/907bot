@@ -13,16 +13,19 @@ let l = require('./../modules/logger.js')();
 let app = require('./../lib/app').app;
 
 // Model Schemas
+let ssOrg = require('./../models/server.schema.organization');
 let ssUser = require('./../models/server.schema.user');
 let ssNotify = require('./../models/server.schema.notification');
 
 // Models
 let User = mongoose.model('User', ssUser);
 let Notify = mongoose.model('Notification', ssNotify);
+let Org = mongoose.model('Organization', ssOrg);
 
 let user = {
   name: 'Jon Stewart',
   phone: process.env.TEST_PHONENUMBER,
+  organization: 'Beans Cafe',
 };
 
 describe('Web server', function() {
@@ -128,13 +131,63 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        let q = `${user.name}, you are now a registered user!`;
+        let q = `${user.name}, you are registered!`;
         assert.equal(res.text.toString().includes(q), true);
       })
       .end(function(err, res) {
         if (err) throw err;
         done();
       });
+  });
+
+  it('should ask to add an organization by matched name', function(done) {
+    request(app)
+      .post('/sms')
+      .set('Cookie', [`state=2`]) // REGISTER_USER & temp bag
+      .send({
+        Body: user.organization,
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        assert.equal(res.text.toString().includes(user.organization), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('should add an organization when confirmed', function(done) {
+
+    let _id = undefined;
+    Org.find({
+        name: user.organization,
+      })
+      .exec()
+      .then(function(org) {
+        l.c('About to replace!');
+        if (org[0]._id) {
+          _id = org[0]._id.toString().replace('"', '').replace('"', '');
+        }
+      }).then(function() {
+        request(app)
+          .post('/sms')
+          .set('Cookie', [`state=2;temp=${_id}`])
+          .send({
+            Body: 'Yes',
+            From: user.phone,
+          })
+          .expect(200)
+          .expect(function(res) {
+            assert.equal(res.text.toString().includes(user.organization), true);
+          })
+          .end(function(err, res) {
+            if (err) throw err;
+            done();
+          });
+      });
+
   });
 
 });

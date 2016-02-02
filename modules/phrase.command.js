@@ -23,25 +23,29 @@ exports.basic = function(ckz, req, res, message) {
     phrase: phrase, // Tagged message
     value: undefined, // Unknown
   };
-
   let tagged = natural.tag(message);
   let tags = tagged.tags.asEnumerable();
   let tag = undefined;
-  if (tags.toArray()[0].length === 1) {
-    tag = tags.toArray()[0][0];
-    switch (tag) {
-      case 'help':
-        {
-          query.command = 'help';
-          break;
-        }
-    }
-  } else {
-    let cmd = tags.where(x => x[0] == 'command').toArray();
-    if (cmd.length !== 0) {
-      query.command = cmd[0][1].replace('"', '').replace('"', '');
+  if (tags.toArray()[0]) {
+    if (tags.toArray()[0].length === 1) {
+      tag = tags.toArray()[0][0];
+      switch (tag) {
+        case 'help':
+          {
+            query.command = 'help';
+            break;
+          }
+      }
+    } else {
+      let cmd = tags.where(x => x[0] == 'command').toArray();
+      if (cmd.length !== 0) {
+        query.command = cmd[0][1].replace('"', '').replace('"', '');
+      }
     }
   }
+
+  query.command = query.command ?
+    query.command.replace('"', '').replace('"', '') : undefined;
 
   return query;
 
