@@ -42,7 +42,7 @@ let WriteActiveNotifications = function*() {
         created: {
           $gte: new Date(
             new Date().getFullYear() + '-' +
-            new Date().getMonth() + 1 + '-' +
+            new Date().getMonth() + '-' +
             (new Date().getDate())),
         },
       },

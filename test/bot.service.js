@@ -2,6 +2,7 @@
 
 // jscs:disable requireCapitalizedComments
 // jscs:disable requireCurlyBraces
+// jscs:disable maximumLineLength
 
 require('dotenv').config();
 
@@ -50,12 +51,12 @@ describe('Register User', function() {
     }).remove().exec();
     Assoc.find({
       '_id.phone': {
-        $eq: process.env.TEST_PHONENUMBER
+        $eq: process.env.TEST_PHONENUMBER,
       },
     }).remove().exec();
     Notify.find({
       phone: {
-        $eq: process.env.TEST_PHONENUMBER
+        $eq: process.env.TEST_PHONENUMBER,
       },
     }).remove().exec();
   });

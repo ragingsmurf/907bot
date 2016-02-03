@@ -207,9 +207,9 @@ module.exports = function() {
         let orgid = org[0]._id;
         let zipcode = org[0].zipcode;
         let cmdphrase = notify.command.join(' ').trim();
-        // 4. Save the notification details.
+        // 4. Save the notification.
         yield user.notify(orgid, frm, notify);
-        // 5. Let the user know the updated took.
+        // 5. Let the user know.
         sms.respond(ckz, req, res, copysms
           .single(x => x.name == 'notification')
           .copy
