@@ -221,6 +221,24 @@ describe('Register User', function() {
       });
   });
 
+  it('should update overflow count for the user\'s organization', function(done) {
+    request(app)
+      .post('/sms')
+      // .set('Cookie', [`state=2;temp=101-04`])
+      .send({
+        Body: 'Overflow Count 10',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        assert.equal(res.text.toString().includes('updated'), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
 });
 
 describe('Help Menu', function() {

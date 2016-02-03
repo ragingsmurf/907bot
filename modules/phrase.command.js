@@ -14,7 +14,7 @@ exports.basic = function(ckz, req, res, message) {
   this.message = message;
   this.ckz = ckz;
 
-  l.c(`Phrase command (${message}) into command query.`);
+  l.c(`Phrase (${message}) into command query.`);
 
   let phrase = natural.tag(this.message); // Tag and Tokenize message.
   let query = {
@@ -23,6 +23,8 @@ exports.basic = function(ckz, req, res, message) {
     phrase: phrase, // Tagged message
     value: undefined, // Unknown
   };
+
+
   let tagged = natural.tag(message);
   let tags = tagged.tags.asEnumerable();
   let tag = undefined;
@@ -48,6 +50,8 @@ exports.basic = function(ckz, req, res, message) {
     query.command.replace('"', '').replace('"', '') : undefined;
 
   return query;
+
+  // TODO - Migrate in core commands below.
 
   //   case 'show': {
   //     if (phrase.length == 1) {
@@ -105,9 +109,9 @@ exports.notice = function(ckz, req, res, message) {
   this.message = message;
   this.ckz = ckz;
 
-  l.c(`Parsing notification (${message}) into command query.`);
+  l.c(`Parsing (${message}) into notify query.`);
 
-  let phrase = natural.tag(this.message); // Tokenize and Stem message.
+  let phrase = natural.tag(this.message); // Tag and Stem message.
   let notify = {
     command: [], // Empty
     message: this.message, // Original message
@@ -115,19 +119,30 @@ exports.notice = function(ckz, req, res, message) {
     phrase: phrase, // Tagged message
     value: undefined, // Unknown
   };
+
+  // Process tagged items.
   if (phrase.tags.length) {
+
+    // Fetch resource Identifier
     let rid = phrase.tags
       .asEnumerable()
       .where(x => x[0] === 'resource')
       .toArray()[0][1];
     notify.resource = rid;
 
+    // Fetch first value passed in.
     let num = phrase.tags
       .asEnumerable()
       .where(x => x[0] === 'numbers')
       .toArray()[0][1][0];
     notify.value = parseInt(num);
-    notify.command = ['bed', 'count'];
+
+    // Tagged resource; likely a command.
+    if (rid) {
+      if (phrase.message.length >= 3) {
+        notify.command = [phrase.message[0], phrase.message[1]];
+      }
+    }
   } else {
     return false;
   }

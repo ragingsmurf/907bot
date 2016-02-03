@@ -43,7 +43,7 @@ module.exports = function() {
   return {
     commandParser: function*(query, req, res, frm, txt, ckz) {
       // Exit if query wasn't parsed.
-      if (!query) {
+      if (!query.command) {
         // No core commands found.
         l.c(`No core-commands parsed.`);
         return false;
@@ -192,7 +192,6 @@ module.exports = function() {
           // }
         default:
           {
-            l.c('cmd engine was not run!');
             return false;
             break;
           }
@@ -220,17 +219,23 @@ module.exports = function() {
         let orgid = org[0]._id;
         let zipcode = org[0].zipcode;
         let cmdphrase = notify.command.join(' ').trim();
-        // 4. Save the notification details, and temperature to the db.
-        let not = yield user.notify(orgid, frm, notify);
+        // 4. Save the notification details.
+        yield user.notify(orgid, frm, notify);
         // 5. Let the user know the updated took.
-        let txt = `Thanks! I updated ${orgname} with a ${cmdphrase} of ${notify.value}.`;
-        sms.respond(ckz, req, res, txt);
+        sms.respond(ckz, req, res, copysms
+          .single(x => x.name == 'notification')
+          .copy
+          .replace('{0}', orgname)
+          .replace('{1}', cmdphrase)
+          .replace('{2}', notify.value));
         handled = true;
       } else {
-        // 2.1 - User isn't associated to the resource.
-        let txt = `You are not subscribed that resource. Please use 'subscribe ${notify.command.join(' ')}'`;
-        sms.respond(ckz, req, res, txt);
-        handled = false;
+        // 2.1 - User not associated
+        sms.respond(ckz, req, res, copysms
+          .single(x => x.name == 'notsubscribed')
+          .copy
+          .replace('{0}', notify.command.join(' ')));
+        handled = true;
       }
       return handled;
     },

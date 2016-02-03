@@ -34,6 +34,14 @@
     ,
   {
     "name": "addorg",
-    "copy": "Can I get the name of the organization you are associated to?"}
+    "copy": "Can I get the name of the organization you are associated to?"},
+  {
+    "name": "notification",
+    "copy": "Thanks! I updated {0} with a {1} of {2}."
+  },
+  {
+    "name": "notsubscribed",
+    "copy": "You are not currently subscribed that resource. Please use 'subscribe {0}'"
+  }
   ]
 }
