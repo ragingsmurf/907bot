@@ -14,7 +14,7 @@ exports.basic = function(ckz, req, res, message) {
   this.message = message;
   this.ckz = ckz;
 
-  l.c(`Parsing phrase (${message}) into command query.`);
+  l.c(`Phrase command (${message}) into command query.`);
 
   let phrase = natural.tag(this.message); // Tag and Tokenize message.
   let query = {

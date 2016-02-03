@@ -164,6 +164,24 @@ describe('Register User', function() {
 
   });
 
+  it('should not associate user when organization not present', function(done) {
+    request(app)
+      .post('/sms')
+      .set('Cookie', [`state=2;temp=101-04`])
+      .send({
+        Body: 'Lorem Ipsum',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        assert.equal(res.text.toString().includes('do not have'), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
   it('should associate user and organization when present', function(done) {
     request(app)
       .post('/sms')
@@ -173,9 +191,27 @@ describe('Register User', function() {
         From: user.phone,
       })
       .expect(200)
-      // .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
       .expect(function(res) {
         assert.equal(res.text.toString().includes('associated'), true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it.skip('should update bed count for the user\'s organization', function(done) {
+    request(app)
+      .post('/sms')
+      // .set('Cookie', [`state=2;temp=101-04`])
+      .send({
+        Body: 'Bed Count 34',
+        From: user.phone,
+      })
+      .expect(200)
+      // .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
+      .expect(function(res) {
+        assert.equal(res.text.toString().includes('updated'), true);
       })
       .end(function(err, res) {
         if (err) throw err;

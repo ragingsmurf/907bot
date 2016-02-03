@@ -58,31 +58,16 @@ module.exports = function() {
             return true;
             break;
           }
-        // case 'subscribe':
-        //   {
-        //     sms.respond(ckz, req, res, 'organization');
-        //     return true;
-        //     break;
-        //   }
         case 'subscribe':
           {
             let parsed = false
-            // Execute Select.
-            // let result = stack.execute(new services.select(query));
             try {
-              // let oeNode = yield stack.getCurrentValue();
-              // let rid = oeNode.id
-              //   .replace('"', '')
-              //   .replace('"', '');
-              // Check if user is associated with an organization.
-
-              let state = require('./cookie.state')(ckz);
-
               let rid = query.phrase.tags
                 .asEnumerable()
                 .where(x => x[0] === 'resource')
                 .toArray()[0][1];
-
+              let state = require('./cookie.state')(ckz);
+              // Check if user is associated with an organization.
               let assoc = yield association.orgid(frm);
               if (assoc.length) {
                 l.c(`Add user org assocation resource to the user.`);

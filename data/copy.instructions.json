@@ -10,7 +10,7 @@
     "confirm": "Is {0} the correct spelling of your name?",
     "success": "Thanks {0}, you are registered! Use 'help' for a list of bot commands.",
     "orgadd": "Ok, I have associated {0} to your profile.",
-    "orgnotfound": "Sorry, I do not have an organization listed for {0}."
+    "orgnotfound": "Sorry, I do not have an organization listed for {0}, perhaps a different spelling?"
   },
   "show": {
     "noparameter": "I need a parameter for your Show request, for example: 'show all'"
