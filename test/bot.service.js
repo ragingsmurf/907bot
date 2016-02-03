@@ -32,7 +32,7 @@ let user = {
 };
 
 describe('Web server', function() {
-  it('should allow for GET on the dashboard', function(done) {
+  it('should allow GET on the dashboard', function(done) {
     request(app)
       .get('/public/index.html')
       .expect(200)
@@ -182,7 +182,7 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        assert.equal(res.text.toString().includes('do not have'), true);
+        assert.equal(res.text.toString().includes('no organization listed'), true);
       })
       .end(function(err, res) {
         if (err) throw err;
@@ -212,7 +212,6 @@ describe('Register User', function() {
   it('should update bed count for the user\'s organization', function(done) {
     request(app)
       .post('/sms')
-      // .set('Cookie', [`state=2;temp=101-04`])
       .send({
         Body: 'Bed Count 36',
         From: user.phone,
@@ -233,7 +232,6 @@ describe('Register User', function() {
   it('should update overflow count for the user\'s organization', function(done) {
     request(app)
       .post('/sms')
-      // .set('Cookie', [`state=2;temp=101-04`])
       .send({
         Body: 'Overflow Count 10',
         From: user.phone,
@@ -243,6 +241,26 @@ describe('Register User', function() {
         assert.equal(
           res.text.toString()
           .includes('updated ' + user.organization + ' with a overflow'),
+          true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('should return user\'s profile', function(done) {
+    request(app)
+      .post('/sms')
+      .send({
+        Body: 'profile',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        assert.equal(
+          res.text.toString()
+          .includes('profile'),
           true);
       })
       .end(function(err, res) {

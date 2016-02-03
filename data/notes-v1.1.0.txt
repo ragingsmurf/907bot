@@ -4,13 +4,26 @@
 Retool the overly con-formative responses user’s are required to send;
   (yes|no) when prompted.
 
+    -- Solved: Added tagging of the incoming phrase with Natural classifiers,
+      Interjections, Resources, and Core Commands.
+
 -  Add natural language processing to pre-determined response types
     -yes or no answer (yeah, ok, yep, yes, no, nope, nada)
+
+    -- Solved: Above.
 
 Changing the default business flow to: Users will be asked to Register
 on the first initial contact, then asked about their organizational affiliation.
   - Rework cookie and business process flow, force user to register and associate
   before proceeding to the command process.
+
+    -- Solved: New Business Flow
+      1. New users are asked to register.
+      2. Help command is presented.
+      3. Subscribe (n):
+        - New users are asked for their organization name.
+        - User is associated with an organization, and subscribed to (n).
+        - (n) List of commands related to (n) is presented.
 
 Create a PROFILE command so users can review what details we have for them
 (Resource Associations, Organization, SMS Alerts (status: On | Off)).
@@ -22,6 +35,8 @@ Create a PROFILE command so users can review what details we have for them
     'alerts': true,
     }
 
+    -- InProcess: buffering
+
 Integrate the weather in a meaningful way on the dashboard
 (I am super close on this).
   -Mockup UI integration, wire up live data.
@@ -29,6 +44,8 @@ Integrate the weather in a meaningful way on the dashboard
 
 Re-work the taxonomy search so it has friendlier API.
   - Can return the name of resource from the ID.
+
+    -- Skipping: Focus on a single resource, Emergency Shelter (101-04)
 
 Re-work the initial broadcast of data to a 'client request' vs.
 a forced push on connect.

@@ -8,6 +8,11 @@
     ]
   },
   "commands": [{
+    "name": "profile",
+    "docs": [
+      "profile"
+    ]
+  }, {
     "name": "subscribe",
     "docs": [
       "subscribe, follow"
@@ -23,23 +28,18 @@
       "begin, start, startup"
     ]
   }, {
-    "name": "end",
+    "name": "stop",
     "docs": [
       "stop, end"
     ]
   }],
   "taxonomy": [{
     "node": "101-04",
-    "command": ["bed", "count"],
+    "name": "Bed Count",
     "docs": [
       "bed count",
       "available beds",
-      "open bed count"
-    ]
-  },{
-    "node": "101-04",
-    "command": ["overflow", "count"],
-    "docs": [
+      "open bed count",
       "overflow count",
       "available beds",
       "overflow bed count"

@@ -2,7 +2,8 @@
   "help": {
     "firstcontact": "Hello, I'm the Social Services @907Bot. I track the availability and status of Social Services in Alaska.\n\nYou can get a list of basic SMS commands that I respond to by texting 'help'.",
     "instructions": "Social Service @907Bot Commands",
-    "newuser": "Hi, I'm the @907Bot. Can I get your name?"
+    "newuser": "Hi, I'm the @907Bot. Can I get your name?",
+    "notparsed": "I was not able formulate your last message into a valid command.  Please try again."
   },
   "register": {
     "firstlast": "Can I get your first and last name?",
@@ -10,7 +11,7 @@
     "confirm": "Is {0} the correct spelling of your name?",
     "success": "Thanks {0}, you are registered! Use 'help' for a list of bot commands.",
     "orgadd": "Service for {0} has been added to your profile.\n\n{1}",
-    "orgnotfound": "Sorry, I do not have an organization listed for {0}, perhaps a different spelling?"
+    "orgnotfound": "Sorry, no organization listed for {0}, perhaps a different spelling?"
   },
   "show": {
     "noparameter": "I need a parameter for your Show request, for example: 'show all'"
