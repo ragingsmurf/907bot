@@ -46,6 +46,12 @@ module.exports = function() {
             return true;
             break;
           }
+        case 'profile':
+          {
+            sms.respond(ckz, req, res, 'profile');
+            return true;
+            break;
+          }
         case 'subscribe':
           {
             let parsed = false

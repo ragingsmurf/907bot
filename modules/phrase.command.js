@@ -24,7 +24,6 @@ exports.basic = function(ckz, req, res, message) {
     value: undefined, // Unknown
   };
 
-
   let tagged = natural.tag(message);
   let tags = tagged.tags.asEnumerable();
   let tag = undefined;
@@ -51,57 +50,7 @@ exports.basic = function(ckz, req, res, message) {
 
   return query;
 
-  // TODO - Migrate in core commands below.
-
-  //   case 'show': {
-  //     if (phrase.length == 1) {
-  //       l.c(`show command found with no parameter.`);
-  //       sms.respond(this.ckz, this.req, this.res, copy.show.noparameter);
-  //       query.command = 'show';
-  //     } else if (phrase.length >= 2) {
-  //       delete phrase[0]; // Remove Command from Array
-  //       query.command = 'show';
-  //       query.value = phrase.join(' ').trim();
-  //       l.c(`show command found with parameter (${query.value}).`);
-  //     }
-  //     return query;
-  //     break;
-  //   }
-  //   case 'select': {
-  //     if (phrase.length == 1) {
-  //       l.c(`select command found with no parameter.`);
-  //       sms.respond(this.ckz, this.req, this.res, copy.select.noparameter);
-  //       query.command = 'select';
-  //     } else if (phrase.length >= 2) {
-  //       delete phrase[0]; // Remove Command
-  //       query.command = 'select';
-  //       query.value = phrase.join(' ').trim();
-  //       l.c(`select command found with parameter (${query.value}).`);
-  //     }
-  //     return query;
-  //     break;
-  //   }
-  //   case 'remov': { // Misspelled as a result of Stemming.
-  //     if (phrase.length == 1) {
-  //       l.c(`remove command found with no parameter.`);
-  //       sms.respond(this.ckz, this.req, this.res, copy.remove.noparameter);
-  //       query.command = 'remove';
-  //     } else if (phrase.length >= 2) {
-  //       delete phrase[0]; // Remove Command
-  //       query.command = 'remove';
-  //       query.value = phrase.join(' ').trim();
-  //       l.c(`remove command found with parameter (${query.value}).`);
-  //     }
-  //     return query;
-  //     break;
-  //   }
-  //   default: {
-  //     l.c('phrase.command failed to parse: ' + query.message);
-  //     return false;
-  //     break;
-  //   }
-  // }
-}
+};
 
 exports.notice = function(ckz, req, res, message) {
   this.req = req;
