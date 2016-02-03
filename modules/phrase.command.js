@@ -107,35 +107,28 @@ exports.notice = function(ckz, req, res, message) {
 
   l.c(`Parsing notification (${message}) into command query.`);
 
-  let phrase = natural.stem(this.message); // Tokenize and Stem message.
+  let phrase = natural.tag(this.message); // Tokenize and Stem message.
   let notify = {
     command: [], // Empty
     message: this.message, // Original message
     resource: undefined, // Unknown ID "101 04"
-    phrase: phrase, // Stemmed message
+    phrase: phrase, // Tagged message
     value: undefined, // Unknown
   };
+  if (phrase.tags.length) {
+    let rid = phrase.tags
+      .asEnumerable()
+      .where(x => x[0] === 'resource')
+      .toArray()[0][1];
+    notify.resource = rid;
 
-  let cmds = require('./../data/cmd.resource')
-    .commands
-    .asEnumerable();
-  if (phrase.length >= 3) {
-    let cmd = cmds
-      .where(x => x.phrase[0] === phrase[0] && x.phrase[1] === phrase[1])
-      .toArray();
-    if (cmd.length == 1) {
-
-      notify.command.push(cmd[0].phrase[0]); // bed
-      notify.command.push(cmd[0].phrase[1]); // count
-      notify.resource = cmd[0].resource; // 101 04
-      delete phrase[0]; // Remove First Command
-      delete phrase[1]; // Remove Second Command
-      let param = phrase.join(' ').trim();
-      notify.value = (parseInt(param) !== NaN) ? parseInt(param) : param;
-      return notify;
-    }
-    return false;
-  } {
+    let num = phrase.tags
+      .asEnumerable()
+      .where(x => x[0] === 'numbers')
+      .toArray()[0][1][0];
+    notify.value = parseInt(num);
+    notify.command = ['bed', 'count'];
+  } else {
     return false;
   }
   return notify;

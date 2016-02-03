@@ -204,6 +204,7 @@ module.exports = function() {
         l.c(`No notification commands parsed.`);
         return false;
       }
+      let handled = false;
       // 1. Find out which org the user belongs too.
       let assoc = yield association.orgid(frm);
       // 2. Is user subscribed to the service being notified?
@@ -224,45 +225,14 @@ module.exports = function() {
         // 5. Let the user know the updated took.
         let txt = `Thanks! I updated ${orgname} with a ${cmdphrase} of ${notify.value}.`;
         sms.respond(ckz, req, res, txt);
+        handled = true;
       } else {
         // 2.1 - User isn't associated to the resource.
-        let txt = `You're not associated to that resource. Please use 'Select ${notify.resource}'`;
+        let txt = `You are not subscribed that resource. Please use 'subscribe ${notify.command.join(' ')}'`;
         sms.respond(ckz, req, res, txt);
+        handled = false;
       }
-    },
-    cookieParser: function*(req, res, frm, txt, ckz) {
-      /*
-      cookie index
-      state: nature of the messages
-            /-- Cookie 'State' List --/
-            registration: new user registration.
-            addResource: associate user with resource type.
-            addOrganization: associate user with organization.
-            firstContact: is this the first time number has SMS'd us?
-            resourceId: user selects specific resource.
-            undefined: un-used, reset status.
-            temp: temporary value storage between messages.
-      */
-      // Check for the organization.
-      if (ckz.get('state') == 'addOrganization' && ckz.get('temp') == undefined) {
-        yield organization.get(req, res, frm, ckz, txt);
-      } else {
-        if (txt.toLowerCase() == 'yes') {
-          let resourceId = ckz.get('resourceId')
-            .replace('"', '')
-            .replace('"', '');
-          yield association.create(frm, ckz.get('temp'), resourceId);
-          ckz.set('resourceId', undefined);
-          ckz.set('state', undefined);
-          ckz.set('temp', undefined);
-          sms.respond(ckz, req, res, 'I added the organization to your profile.');
-        } else {
-          // Clear the cookie
-          ckz.set('temp', undefined);
-          ckz.set('state', undefined);
-          sms.respond(ckz, req, res, 'Ok, I skipped adding the organization to your profile.');
-        }
-      }
+      return handled;
     },
   }
 };

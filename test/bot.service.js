@@ -51,6 +51,9 @@ describe('Register User', function() {
     Assoc.find({
       '_id.phone': { $eq: process.env.TEST_PHONENUMBER },
     }).remove().exec();
+    Notify.find({
+      phone: { $eq: process.env.TEST_PHONENUMBER },
+    }).remove().exec();
   });
 
   it('should ask an unknown user for their name', function(done) {
@@ -200,16 +203,15 @@ describe('Register User', function() {
       });
   });
 
-  it.skip('should update bed count for the user\'s organization', function(done) {
+  it('should update bed count for the user\'s organization', function(done) {
     request(app)
       .post('/sms')
       // .set('Cookie', [`state=2;temp=101-04`])
       .send({
-        Body: 'Bed Count 34',
+        Body: 'Bed Count 36',
         From: user.phone,
       })
       .expect(200)
-      // .expect('set-cookie', 'state=2; path=/; httponly,temp=101-04; path=/; httponly')
       .expect(function(res) {
         assert.equal(res.text.toString().includes('updated'), true);
       })
