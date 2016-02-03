@@ -49,10 +49,14 @@ describe('Register User', function() {
       _id: process.env.TEST_PHONENUMBER,
     }).remove().exec();
     Assoc.find({
-      '_id.phone': { $eq: process.env.TEST_PHONENUMBER },
+      '_id.phone': {
+        $eq: process.env.TEST_PHONENUMBER
+      },
     }).remove().exec();
     Notify.find({
-      phone: { $eq: process.env.TEST_PHONENUMBER },
+      phone: {
+        $eq: process.env.TEST_PHONENUMBER
+      },
     }).remove().exec();
   });
 
@@ -195,13 +199,14 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        assert.equal(res.text.toString().includes('associated'), true);
+        assert.equal(res.text.toString().includes('bed count'), true);
       })
       .end(function(err, res) {
         if (err) throw err;
         done();
       });
   });
+
 
   it('should update bed count for the user\'s organization', function(done) {
     request(app)
@@ -213,7 +218,10 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        assert.equal(res.text.toString().includes('updated'), true);
+        assert.equal(
+          res.text.toString()
+          .includes('updated ' + user.organization + ' with a bed count'),
+          true);
       })
       .end(function(err, res) {
         if (err) throw err;
@@ -231,7 +239,10 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        assert.equal(res.text.toString().includes('updated'), true);
+        assert.equal(
+          res.text.toString()
+          .includes('updated ' + user.organization + ' with a overflow'),
+          true);
       })
       .end(function(err, res) {
         if (err) throw err;
@@ -260,42 +271,5 @@ describe('Help Menu', function() {
         done();
       });
   });
-
-  // it('should raise a subscribe command', function(done) {
-  //   request(app)
-  //     .post('/sms')
-  //     .send({
-  //       Body: 'Subscribe Bed Count',
-  //       From: user.phone,
-  //     })
-  //     .expect(200)
-  //     .expect(function(res) {
-  //       let q = `Commands`;
-  //       assert.equal(res.text.toString().includes(q), true);
-  //     })
-  //     .end(function(err, res) {
-  //       if (err) throw err;
-  //       done();
-  //     });
-  // });
-
-  // it('should update bed count', function(done) {
-  //   request(app)
-  //     .post('/sms')
-  //     .send({
-  //       Body: 'Bed Count 33',
-  //       From: user.phone,
-  //     })
-  //     .expect(200)
-  //     .expect(function(res) {
-  //       let q = `Commands`;
-  //       assert.equal(res.text.toString().includes(q), true);
-  //     })
-  //     .end(function(err, res) {
-  //       if (err) throw err;
-  //       done();
-  //     });
-  // });
-
 
 });

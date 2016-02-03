@@ -30,10 +30,19 @@
   }],
   "taxonomy": [{
     "node": "101-04",
+    "command": ["bed", "count"],
     "docs": [
       "bed count",
       "available beds",
       "open bed count"
+    ]
+  },{
+    "node": "101-04",
+    "command": ["overflow", "count"],
+    "docs": [
+      "overflow count",
+      "available beds",
+      "overflow bed count"
     ]
   }]
 }

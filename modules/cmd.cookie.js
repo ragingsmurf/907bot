@@ -8,6 +8,8 @@
 let natural = require('natural');
 natural.PorterStemmer.attach();
 require('linq-es6');
+let doT = require('./../node_modules/dot/doT.js');
+doT.templateSettings = require('./dotSettings')();
 
 // Internal
 let copy = require('./../data/copy.instructions');
@@ -15,6 +17,8 @@ let phraseN = require('./phrase.natural')();
 let monUser = require('./mongo.user'); // migrate this to process.user
 let organization = require('./process.organization');
 let association = require('./process.association');
+let cmdres = require('./../data/cmd.resource');
+let temp = require('./../data/templates');
 let sms = require('./sms.utility');
 let l = require('./logger')();
 
@@ -65,12 +69,22 @@ module.exports = function() {
           }
         case state.states.ADD_ORGANIZATION:
           {
-            if (state.getTemp() !== undefined) {
+            let rid = state.getTemp();
+            if (rid !== undefined) {
               let org = yield organization.get(req, res, frm, ckz, txt);
               if (org) {
                 yield association.create(frm, org._id, state.getTemp());
+                let cmds = cmdres.commands
+                  .asEnumerable()
+                  .where(x => x.resource === rid)
+                  .toArray();
+                let list = doT.template(temp.select.results)({
+                  rid: rid,
+                  cmds: cmds,
+                });
                 sms.respond(ckz, req, res, copy.register.orgadd
-                  .replace('{0}', org.name));
+                  .replace('{0}', org.name)
+                  .replace('{1}', list));
               } else {
                 sms.respond(ckz, req, res, copy.register.orgnotfound
                   .replace('{0}', txt));

@@ -120,30 +120,28 @@ exports.notice = function(ckz, req, res, message) {
     value: undefined, // Unknown
   };
 
-  // Process tagged items.
+  // 1. Process tagged items.
   if (phrase.tags.length) {
-
-    // Fetch resource Identifier
+    // 2. Fetch resource Identifier
     let rid = phrase.tags
       .asEnumerable()
       .where(x => x[0] === 'resource')
       .toArray()[0][1];
     notify.resource = rid;
-
-    // Fetch first value passed in.
-    let num = phrase.tags
-      .asEnumerable()
-      .where(x => x[0] === 'numbers')
-      .toArray()[0][1][0];
-    notify.value = parseInt(num);
-
-    // Tagged resource; likely a command.
+    // 3. Identified a resource; likely prefixed with a command.
     if (rid) {
       if (phrase.message.length >= 3) {
         notify.command = [phrase.message[0], phrase.message[1]];
       }
     }
+    // 4. Grab first value passed in.
+    let num = phrase.tags
+      .asEnumerable()
+      .where(x => x[0] === 'numbers')
+      .toArray()[0][1][0];
+    notify.value = parseInt(num);
   } else {
+    //
     return false;
   }
   return notify;

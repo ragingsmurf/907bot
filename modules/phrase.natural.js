@@ -34,13 +34,17 @@ module.exports = function() {
         };
       }
 
-      // 2. Classieifer documents for taggging.
+      // 2. Classifier documents.
+
+      // Response interjections
       for (let i = 0; i < docs.interjections.yes.length; i++) {
         tfidf.addDocument(docs.interjections.yes[i], ['interjection', 'yes']);
       }
       for (let i = 0; i < docs.interjections.no.length; i++) {
         tfidf.addDocument(docs.interjections.no[i], ['interjection', 'no']);
       }
+
+      // Bot core commands
       for (var i = 0; i < docs.commands.asEnumerable().toArray().length; i++) {
         let node = docs.commands.asEnumerable().toArray()[i]['name'];
         let rslt = docs.commands.asEnumerable().toArray()[i];
@@ -48,6 +52,8 @@ module.exports = function() {
           tfidf.addDocument(docs.commands[i]['docs'][d], ['command', node]);
         }
       };
+
+      // Resource tags
       for (let i = 0; i < docs.taxonomy.length; i++) {
         let node = docs.taxonomy[i].node;
         for (let d = 0; d < docs.taxonomy[i].docs.length; d++) {
