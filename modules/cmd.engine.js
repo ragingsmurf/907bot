@@ -52,6 +52,31 @@ module.exports = function() {
           }
         case 'unsubscribe':
           {
+
+            // Check if the user is associated with an organization.
+            let assoc = yield association.orgid(frm);
+            if (assoc.length) {
+
+              let rid = query.phrase.tags
+                .asEnumerable()
+                .where(x => x[0] === 'resource')
+                .select(x => x[1])
+                .toArray();
+              let docs = docres.taxonomy
+                .asEnumerable()
+                .where(x => x.node == rid)
+                .toArray();
+              let n = docs[0][`name`];
+              l.c(`Removing service association from user profile.`);
+              association.remove(frm, rid);
+              // Notify the user
+              sms.respond(ckz, req, res, `Successfully unsubscribed from ${n}.`);
+            } else {
+              let txt = `It doesn't appear you're associated with an organization.`;
+              // Notify the user
+              sms.respond(ckz, req, res, txt);
+            }
+
             sms.respond(ckz, req, res, 'remove');
             return true;
             break;

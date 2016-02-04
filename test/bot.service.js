@@ -278,11 +278,30 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        l.c(res.text);
         assert.equal(
           res.text.toString()
-          .includes('remove'),
+          .includes('Successfully unsubscribed'),
           true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('should return user\'s profile without command list', function(done) {
+    request(app)
+      .post('/sms')
+      .send({
+        Body: 'profile',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        assert.equal(
+          res.text.toString()
+          .includes('Bed Count'),
+          false);
       })
       .end(function(err, res) {
         if (err) throw err;

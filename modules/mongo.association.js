@@ -38,7 +38,7 @@ let RemoveService = function(phone, resource) {
   l.c('calling mongo.association.RemoveService');
   Assoc.update(
       { '_id.phone': { $eq: phone } },
-      { $pull: { service: { $in: [ resource ] } } })
+      { $pull: { service: { $in: [ resource.toString() ] } } })
       .exec();
 }
 
