@@ -322,7 +322,6 @@ describe('Help Menu', function() {
       })
       .expect(200)
       .expect(function(res) {
-        l.c(res.text);
         let q = `Review user profile details`;
         assert.equal(res.text.toString().includes(q), true);
       })
