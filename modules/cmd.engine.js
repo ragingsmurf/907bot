@@ -10,16 +10,20 @@ let doT = require('./../node_modules/dot/doT.js');
 doT.templateSettings = require('./dotSettings')();
 // Internal
 let cmd = require('./cmd')();
-let sms = require('./sms.utility');
 let stack = require('./cmd.stack')();
 let services = require('./cmd.services');
+
 let organization = require('./process.organization');
 let association = require('./process.association');
 let user = require('./process.user');
-let temp = require('./../data/templates');
+
+let sms = require('./sms.utility');
 let l = require('./logger')();
+
+let temp = require('./../data/templates');
 let data = require('./data.sources')();
 let cmdres = require('./../data/cmd.resource');
+let docres = require('./../data/copy.classifiers');
 let copyins = require('./../data/copy.instructions');
 let copysms = require('./../data/copy.sms')
   .services
@@ -48,7 +52,35 @@ module.exports = function() {
           }
         case 'profile':
           {
-            sms.respond(ckz, req, res, 'profile');
+            let p = yield user.profile(frm);
+            let u = p[0];
+            let t = {
+              name: u.name,
+              status: u.enabled ? 'enabled' : 'disabled',
+              list: [],
+            };
+            // Rollup subscriptions and commands.
+            for (let a of u.associations) {
+              for (let s of a.service) {
+                let docs = docres.taxonomy
+                  .asEnumerable()
+                  .where(x => x.node == s)
+                  .toArray();
+                let n = docs[0][`name`];
+                let cmds = cmdres.commands
+                  .asEnumerable()
+                  .where(x => x.resource === s)
+                  .toArray();
+                t.list.push({
+                  name: n,
+                  lineitems: cmds,
+                });
+              }
+            }
+            let list = doT.template(temp.profile.results)({
+              profile: t,
+            });
+            sms.respond(ckz, req, res, list);
             return true;
             break;
           }
@@ -65,9 +97,6 @@ module.exports = function() {
               let assoc = yield association.orgid(frm);
               if (assoc.length) {
                 l.c(`Add user org assocation resource to the user.`);
-                let resId = (ckz.get('resourceId') == undefined) ? rid : resourceId
-                  .replace('"', '')
-                  .replace('"', '');
                 // Associate user to resource
                 association.add(frm, rid);
                 let cmds = cmdres.commands

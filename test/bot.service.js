@@ -260,7 +260,7 @@ describe('Register User', function() {
       .expect(function(res) {
         assert.equal(
           res.text.toString()
-          .includes('profile'),
+          .includes('Bed Count Resource'),
           true);
       })
       .end(function(err, res) {

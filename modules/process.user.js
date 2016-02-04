@@ -6,7 +6,6 @@
 let copy = require('./../data/copy.instructions');
 let phraseN = require('./phrase.natural')();
 let monUser = require('./mongo.user');
-let monAgg = require('./mongo.aggregate');
 let sms = require('./sms.utility');
 let l = require('./logger')();
 
@@ -30,10 +29,9 @@ let Register = function(req, res, frm, ckz, txt) {
   };
 };
 
-let Profile = function*(req, res, frm, ckz) {
+let Profile = function*(frm) {
   l.c('yielding process.user.Profile');
-  let users = yield monAgg.profile(frm);
-  return (users[0] === undefined ? false : true);
+  return yield monUser.profile(frm);
 };
 
 let ParseFailed = function(req, res, frm, ckz) {

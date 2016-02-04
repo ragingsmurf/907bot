@@ -1,45 +1,12 @@
 'use strict';
 
 let mongoose = require('mongoose');
-
+let ssOrg = require('./../models/server.schema.organization');
 let ssNotify = require('./../models/server.schema.notification');
 let Notify = mongoose.model('Notification', ssNotify);
-let ssOrg = require('./../models/server.schema.organization');
 let Org = mongoose.model('Organization', ssOrg);
-let ssUser = require('./../models/server.schema.user');
-let User = mongoose.model('User', ssUser);
-let l = require('./logger')();
 
-let GetUserProfile = function*(frm) {
-  l.c('yielding mongo.aggregate.GetUserProfile');
-  return yield Users.aggregate([{
-    $lookup: {
-      from: 'associations',
-      localField: '_id',
-      foreignField: '_id.phone',
-      as: 'associations',
-    },
-  },
-  {
-    $match: {
-      _id: {
-        $eq: frm,
-      },
-    },
-  },
-   {
-    $sort: {
-      name: 1,
-    },
-  }, {
-    $project: {
-      _id: 1,
-      name: 1,
-      enabled: 1,
-      'associations.service': 1,
-    },
-  }, ]);
-}
+let l = require('./logger')();
 
 let GetActiveNotifications = function*() {
   l.c('yielding mongo.aggregate.GetActiveNotifications');
@@ -110,6 +77,5 @@ let WriteActiveNotifications = function*() {
     }, ]);
 }
 
-exports.profile = GetUserProfile;
 exports.notifications = GetActiveNotifications;
 exports.write = WriteActiveNotifications;
