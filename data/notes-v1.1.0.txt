@@ -32,10 +32,11 @@ Create a PROFILE command so users can review what details we have for them
     'name': 'Jim Davis',
     'organization': 'Beans Cafe',
     'resources': ['101 04', '101 04'],
-    'alerts': true,
+    'enabled': true,
     }
 
-    -- InProcess: buffering
+    -- mostly solved: Basic profile information; list of subscribed commands,
+
 
 Integrate the weather in a meaningful way on the dashboard
 (I am super close on this).

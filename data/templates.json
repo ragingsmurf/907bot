@@ -7,6 +7,6 @@
     "results":"{{~ it.cmds :c }}{{=c.instruction}}\n\n{{~}}"
   },
   "profile" : {
-    "results":"{{=it.profile.name}}, your account is {{=it.profile.status}}.\n{{~ it.profile.list :c }}{{=c.name}} Resource\n{{~ c.lineitems :li }}{{=li.instruction}}\n{{~}}[remove {{=c.name.toLowerCase()}}] Unsubscribe from {{=c.name}}.\n{{~}}"
+    "results":"{{=it.profile.name}}, your account for {{=it.profile.organization}} has alerts {{=it.profile.status}}.\n{{~ it.profile.list :c }}{{=c.name}} Resource\n{{~ c.lineitems :li }}{{=li.instruction}}\n{{~}}[remove {{=c.name.toLowerCase()}}] Unsubscribe from {{=c.name}}.\n{{~}}"
   }
 }

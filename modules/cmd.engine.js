@@ -90,6 +90,13 @@ module.exports = function() {
               status: u.enabled ? 'enabled' : 'disabled',
               list: [],
             };
+
+            let assoc = yield association.orgid(frm);
+            let orgid = assoc[0]._id.orgid;
+
+            let org = yield organization.select(orgid);
+            t.organization = org[0].name;
+
             // Rollup subscriptions and commands.
             for (let a of u.associations) {
               for (let s of a.service) {
