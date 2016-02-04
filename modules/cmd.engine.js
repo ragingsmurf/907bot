@@ -50,6 +50,12 @@ module.exports = function() {
             return true;
             break;
           }
+        case 'unsubscribe':
+          {
+            sms.respond(ckz, req, res, 'remove');
+            return true;
+            break;
+          }
         case 'profile':
           {
             let p = yield user.profile(frm);

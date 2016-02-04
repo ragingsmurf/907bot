@@ -42,9 +42,6 @@ let AddNotification = function*(orgid, frm, notify) {
 }
 let GetUserProfile = function*(frm) {
   l.c('yielding mongo.user.GetUserProfile');
-
-  // return yield User.find({_id: 'dasf'});
-
   return yield User.aggregate(
     [{
       $lookup: {
@@ -56,7 +53,7 @@ let GetUserProfile = function*(frm) {
     }, {
       $match: {
         _id: {
-          $eq: '+19073439329',
+          $eq: frm,
         },
       },
     }, {
@@ -68,7 +65,6 @@ let GetUserProfile = function*(frm) {
       },
     }, ],
     function(err, data) {});
-
 }
 
 exports.find = FindUser;

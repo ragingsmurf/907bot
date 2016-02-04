@@ -269,6 +269,27 @@ describe('Register User', function() {
       });
   });
 
+  it('should unsubscribe user from bed count service', function(done) {
+    request(app)
+      .post('/sms')
+      .send({
+        Body: 'remove bed count',
+        From: user.phone,
+      })
+      .expect(200)
+      .expect(function(res) {
+        l.c(res.text);
+        assert.equal(
+          res.text.toString()
+          .includes('remove'),
+          true);
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
 });
 
 describe('Help Menu', function() {
