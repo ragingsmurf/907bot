@@ -15,6 +15,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <body>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -32,25 +33,58 @@
       <h3 class="text-muted">@907Bot Dashboard</h3>
     </div>
     <div id="results">
-      <ul class="list-group" data-bind="foreach: $root.results">
-        <li class="list-group-item">
-          <h4 data-bind="text: $data.name"></h4>
-          <h6 data-bind="text: $data.zipcode"></h6>
-          <div data-bind="foreach: notifications" data-bind="visible: $data.notifications().length">
-            <p style="font-size : 22px; font-family : courier">
-              <span data-bind="text: $data._id.command().join(' ')"></span>
-              </br>
-              <i class="fa fa-bed"></i>
-              [<span data-bind="text: $data.value"></span>]
-            </p>
-            <p style="font-family: Courier;">
-              SMS <i class="fa fa-mobile"></i>
-              <span data-bind='text: moment.utc($data.created()).local().fromNow()'></span>
-            </p>
-            <hr/>
+      <!-- ko foreach: $root.results -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title" data-bind="text: $data.name"></h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="list-group">
+                <div class="list-group-item active">
+                  <i class="fa fa-bed"></i> Bed Count
+                </div>
+                <!-- ko foreach: notifications -->
+                <div class="list-group-item" data-bind="css: { 'list-group-item-danger': $data.value() <= 10, 'list-group-item-success': $data.value() > 30 }">
+                  <span data-bind="text: $data._id.command().join(' ')"></span> as of
+                  <span data-bind='text: moment.utc($data.created()).local().fromNow()'></span>
+                  <span class="badge" data-bind="text: $data.value"></span>
+                </div>
+                <!-- /ko -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                  <i class="fa fa-sun-o"></i>
+                  <span data-bind="text: $data.zipcode"></span> Forecast
+                </div>
+                <div class="panel-body">
+                  Splashy Depiction of today's weather!
+                </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Week</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Tues</th>
+                    </tr>
+                    <tr>
+                      <th scope="row">Wed</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <!-- /ko -->
     </div>
     <hr />
     <footer class="footer">
