@@ -1,7 +1,6 @@
 {
   "help": {
     "firstcontact": "Hello, I'm the Social Services @907Bot. I track the availability and status of Social Services in Alaska.\n\nYou can get a list of basic SMS commands that I respond to by texting 'help'.",
-    "instructions": "Social Service @907Bot Commands",
     "newuser": "Hi, I'm the @907Bot. Can I get your name?",
     "notparsed": "I was not able formulate your last message into a valid command.  Please try again."
   },

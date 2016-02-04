@@ -322,7 +322,8 @@ describe('Help Menu', function() {
       })
       .expect(200)
       .expect(function(res) {
-        let q = `Commands`;
+        l.c(res.text);
+        let q = `Review user profile details`;
         assert.equal(res.text.toString().includes(q), true);
       })
       .end(function(err, res) {

@@ -46,7 +46,13 @@ module.exports = function() {
       switch (cmd) {
         case 'help':
           {
-            sms.respond(ckz, req, res, copyins.help.instructions);
+            let docs = docres.taxonomy
+              .asEnumerable()
+              .toArray();
+            let list = doT.template(temp.help.results)({
+              list: docs,
+            });
+            sms.respond(ckz, req, res, list);
             return true;
             break;
           }
@@ -56,7 +62,6 @@ module.exports = function() {
             // Check if the user is associated with an organization.
             let assoc = yield association.orgid(frm);
             if (assoc.length) {
-
               let rid = query.phrase.tags
                 .asEnumerable()
                 .where(x => x[0] === 'resource')
@@ -76,8 +81,6 @@ module.exports = function() {
               // Notify the user
               sms.respond(ckz, req, res, txt);
             }
-
-            sms.respond(ckz, req, res, 'remove');
             return true;
             break;
           }
@@ -222,34 +225,6 @@ module.exports = function() {
           //     }
           //   } catch (err) {
           //     sms.respond(ckz, req, res, err);
-          //   } finally {
-          //
-          //   }
-          //   break;
-          // }
-          // case 'remove': {
-          //   // Execute Select.
-          //   l.c(`Running Remove Command.`);
-          //   let result = stack.execute(new services.select(query));
-          //   try {
-          //     let oeNode = yield stack.getCurrentValue();
-          //     let rid = oeNode.id
-          //       .replace('"', '')
-          //       .replace('"', '');
-          //     // Check if the user is associated with an organization.
-          //     let assoc = yield association.orgid(frm);
-          //     if (assoc.length) {
-          //       l.c(`Removing service association from user profile.`);
-          //       association.remove(frm, rid);
-          //       // Notify the user
-          //       sms.respond(ckz, req, res, `I removed (${rid}) from your profile.`);
-          //     } else {
-          //       let txt = `It doesn't appear you're associated with an organzation.`;
-          //       // Notify the user
-          //       sms.respond(ckz, req, res, txt);
-          //     }
-          //   } catch (err) {
-          //     sms.respond(ckz, req, res, 'I wasn\'t able to find that resource code.');
           //   } finally {
           //
           //   }

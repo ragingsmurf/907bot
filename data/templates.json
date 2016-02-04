@@ -8,5 +8,8 @@
   },
   "profile" : {
     "results":"{{=it.profile.name}}, your account for {{=it.profile.organization}} has alerts {{=it.profile.status}}.\n{{~ it.profile.list :c }}{{=c.name}} Resource\n{{~ c.lineitems :li }}{{=li.instruction}}\n{{~}}[remove {{=c.name.toLowerCase()}}] Unsubscribe from {{=c.name}}.\n{{~}}"
+  },
+  "help" : {
+    "results":"@907Bot Social Services Help Menu\n{{~ it.list :c }}[subscribe {{=c.name.toLowerCase()}}]\n{{~}}[profile] Review user profile details.\n"
   }
 }
