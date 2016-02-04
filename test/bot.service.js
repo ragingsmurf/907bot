@@ -258,7 +258,6 @@ describe('Register User', function() {
       })
       .expect(200)
       .expect(function(res) {
-        l.c(res.text);
         assert.equal(
           res.text.toString()
           .includes('Bed Count Resource'),

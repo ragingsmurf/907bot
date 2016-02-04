@@ -87,15 +87,19 @@ module.exports = function() {
             let u = p[0];
             let t = {
               name: u.name,
+              organization: undefined,
               status: u.enabled ? 'enabled' : 'disabled',
               list: [],
             };
 
             let assoc = yield association.orgid(frm);
-            let orgid = assoc[0]._id.orgid;
-
-            let org = yield organization.select(orgid);
-            t.organization = org[0].name;
+            if (assoc.length) {
+              let orgid = assoc[0]._id.orgid;
+              let org = yield organization.select(orgid);
+              t.organization = org[0].name;
+            } else {
+              t.organization = 'an unsubscribed organization'
+            }
 
             // Rollup subscriptions and commands.
             for (let a of u.associations) {
