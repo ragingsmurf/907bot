@@ -29,10 +29,10 @@ let GetActiveNotifications = function*() {
         zipcode: 1,
         'notifications._id.command': 1,
         'notifications.value': 1,
-        'notifications.temperature': 1,
         'notifications.created': 1,
       },
-    }, ]);
+    }, ],
+    function(err, data) {});
 };
 
 let WriteActiveNotifications = function*() {
@@ -57,8 +57,8 @@ let WriteActiveNotifications = function*() {
           orgid: '$orgid',
           command: '$command',
         },
-        temperature: {
-          $first: '$temperature',
+        weather: {
+          $first: '$weather',
         },
         created: {
           $first: '$created',
@@ -74,7 +74,7 @@ let WriteActiveNotifications = function*() {
       },
     }, {
       $out: 'activenotifications',
-    }, ]);
+    }, ],function(err, data) {});
 }
 
 exports.notifications = GetActiveNotifications;

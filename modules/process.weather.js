@@ -11,14 +11,18 @@ let GetCurrentWeather = function*(zipcode) {
   return yield monWx.get(zipcode);
 };
 
-let CreateOrFindWeather = function*(data) {
-  l.c(data.length);
-  for (var i = 0; i < data.length; i++) {
-    l.c(data[i].zipcode);
-    let forecast = yield data.weather('99501');
-    l.c(forecast);
-  }
-  return data;
+let CreateOrFindWeather = function*(zipcode, forecast) {
+  l.c('yielding process.weather.CreateOrFindWeather');
+
+  return yield monWx.update(zipcode, forecast);
+
+  // l.c(data.length);
+  // for (var i = 0; i < data.length; i++) {
+  //   l.c(data[i].zipcode);
+  //   let forecast = yield data.weather('99501');
+  //   l.c(forecast);
+  // }
+  // return data;
 };
 
 exports.get = GetCurrentWeather;

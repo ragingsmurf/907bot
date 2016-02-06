@@ -7,13 +7,18 @@ let findOrCreate = require('mongoose-findorcreate');
 let l = require('./logger')();
 let ssWx = require('./../models/server.schema.weather')
   .plugin(findOrCreate);
-
-// Active model
 let Wx = mongoose.model('Weather', ssWx);
 
 let CreateOrFindWeather = function(zipcode, forecast) {
   l.c('yielding mongo.weather.CreateOrFindWeather');
   let p = new Promise(function(resolve, reject) {
+    // Clear out old results.
+    Wx.find({
+      created: {
+        $lt: new Date(new Date().getTime() - 1000 * 60 * 20),
+      },
+    }).remove().exec();
+    // Save forecast.
     Wx.findOrCreate({
       _id: zipcode,
     }, function(err, wx, created) {
@@ -33,6 +38,9 @@ let GetCurrentWeather = function*(zipcode) {
   l.c('yielding mongo.weather.GetCurrentWeather');
   return yield Wx.find({
     _id: zipcode,
+    created: {
+      $gt: new Date(new Date().getTime() - 1000 * 60 * 20),
+    },
   }, 'current');
 };
 
