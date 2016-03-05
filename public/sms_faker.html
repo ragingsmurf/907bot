@@ -1,0 +1,63 @@
+<html>
+    <body>
+        <form method="POST" onsubmit="return postIt()">
+            Phone: <input name="From" /><br />
+            Message: <input name="Body" /><br />
+            <input type="submit" />
+        </form>
+
+        <div id="output"></div>
+
+        <script>
+            var outputDiv = document.getElementById('output');
+
+            function removeLoading() {
+                window.clearInterval(interval);
+                outputDiv.innerHTML = '';
+            }
+
+            function postIt(){
+                showLoading();
+
+                var http = new XMLHttpRequest();
+                http.open("POST", "/sms", true);
+                var payload = {
+                    Body: document.getElementsByName('Body')[0].value,
+                    From: document.getElementsByName('From')[0].value,
+                };
+                payload = JSON.stringify(payload);
+
+                //Send the proper header information along with the request
+                http.setRequestHeader("Content-type", "application/json");
+
+                http.onreadystatechange = updateOutputDiv.bind(http);
+                http.send(payload);
+
+                return false;
+            }
+
+            function showLoading() {
+                var elements = ['&bull;', '&nbsp;', '&nbsp;', '&nbsp;']
+                interval = window.setInterval(
+                        function() {
+                            var output = elements.join('');
+                            outputDiv.innerHTML = output;
+                            elements.unshift(elements.pop());
+                        },
+                        300
+                );
+            }
+
+            function updateOutputDiv() {
+                removeLoading();
+
+                if(this.readyState == 4) {
+                    var output = 'Sorry, there was an error';
+                    if(this.status == 200) output = this.responseText;
+                    output = output.replace(/\n/g, '<br>');
+                    outputDiv.innerHTML = output;
+                }
+            }
+        </script>
+    </body>
+</html>
