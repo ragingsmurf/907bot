@@ -17,7 +17,8 @@
     "test": "mocha",
     "test:watch": "nodemon -x 'mocha'",
     "run:watch": "nf start web=1,worker=1 -p 3000",
-    "start": "node lib/app.js"
+    "start": "node lib/app.js",
+    "postinstall": "bower install"
   },
   "author": "James Davis",
   "license": "ISC",
