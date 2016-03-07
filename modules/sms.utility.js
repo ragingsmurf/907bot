@@ -1,7 +1,7 @@
 'use strict';
 
-let accountSid = process.env.TWILIO_SID;
-let authToken = process.env.TWILIO_SECRET;
+let accountSid = process.env.TWILIO_SID || 'nonworking_sid';
+let authToken = process.env.TWILIO_SECRET || 'nonworking_key';
 let twilio = require('twilio');
 let client = new twilio.RestClient(accountSid, authToken);
 let l = require('./logger')();
